@@ -44,7 +44,7 @@ export class UserController
     @Body() { name }: ReqUpdateUserDto
   )
   {
-    return this.userService.updateUserInfo(user.user_id, name);
+    return this.userService.updateUserInfo(user.userId, name);
   }
 
   @ApiBearerAuth()
@@ -53,6 +53,6 @@ export class UserController
     @UserInfo() user: User
   )
   {
-    return this.userService.deleteUser(user.user_id);
+    return this.userService.deleteUser(user.userId);
   }
 }
