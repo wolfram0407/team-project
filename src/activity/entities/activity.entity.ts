@@ -1,4 +1,4 @@
-import { IsString, IsInt } from "class-validator";
+import { IsString, IsInt } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -8,25 +8,25 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
+} from 'typeorm';
 
 @Entity({
-  name: "activity",
+  name: 'activity',
 })
 export class Activity {
   @PrimaryGeneratedColumn()
-  activityId: number;
+  activity_id: number;
 
   @IsInt()
-  @Column("int", { nullable: false })
-  userId: number;
+  @Column('int', { nullable: false })
+  user_id: number;
 
   @IsInt()
-  @Column("int", { nullable: false })
-  cardId: number;
+  @Column('int', { nullable: false })
+  card_id: number;
 
   @IsString()
-  @Column("varchar", { nullable: false })
+  @Column('varchar', { nullable: false })
   content: string;
 
   @CreateDateColumn()
@@ -39,10 +39,10 @@ export class Activity {
   deletedAt?: Date;
 
   //   @ManyToOne(() => User)
-  //   @JoinColumn({ name: 'userId' })
+  //   @JoinColumn({ name: 'user_id' })
   //   user: User;
 
   //   @ManyToOne(() => Card)
-  //   @JoinColumn({ name: 'cardId' })
+  //   @JoinColumn({ name: 'card_id' })
   //   card: Card;
 }

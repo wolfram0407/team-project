@@ -1,8 +1,10 @@
-import { PickType } from "@nestjs/mapped-types";
+import { ApiProperty } from '@nestjs/swagger';
 
-import { Activity } from "../entities/activity.entity";
+import { IsNotEmpty, IsString } from 'class-validator';
 
-// picktype 이것만 사용하겠따.
-export class CreateActivityDto extends PickType(Activity, [
-  "content",
-] as const) {}
+export class CreateActivityDto {
+  @ApiProperty({ required: true, example: '댓글을 입력하세요.' })
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+}

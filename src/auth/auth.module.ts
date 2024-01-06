@@ -2,9 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { ActivityModule } from 'src/activity/activity.module';
 import { UserModule } from 'src/user/user.module';
-
-
 
 @Module({
   imports: [
@@ -16,9 +15,9 @@ import { UserModule } from 'src/user/user.module';
       inject: [ConfigService],
     }),
     UserModule,
+    ActivityModule,
   ],
   controllers: [],
   providers: [],
-
 })
-export class AuthModule { }
+export class AuthModule {}
