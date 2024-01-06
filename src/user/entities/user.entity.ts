@@ -10,7 +10,7 @@ export class User
 {
 
   @PrimaryGeneratedColumn()
-  user_id: number
+  userId: number
 
   @Column({ type: 'varchar', nullable: false, unique: true })
   email: string

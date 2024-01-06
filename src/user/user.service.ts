@@ -45,7 +45,7 @@ export class UserService
     if (!compareSync(password, user?.password ?? ''))
       throw new UnauthorizedException('비밀번호를 확인해주세요.');
 
-    const payload = { sub: user.user_id, tokenType: 'access' };
+    const payload = { sub: user.userId, tokenType: 'access' };
     return {
       accessToken: this.jwtService.sign(payload, { expiresIn: '1d' })
     };
@@ -54,25 +54,25 @@ export class UserService
 
   async updateUserInfo(userId: number, name: string)
   {
-    const updated = await this.userRepository.update({ user_id: userId }, { name })
+    const updated = await this.userRepository.update({ userId }, { name })
 
     return updated;
   }
 
   async deleteUser(userId: number)
   {
-    return await this.userRepository.softDelete({ user_id: userId })
+    return await this.userRepository.softDelete({ userId })
   }
 
-  async findUserById(user_id: number)
+  async findUserById(userId: number)
   {
-    return await this.userRepository.findOneBy({ user_id })
+    return await this.userRepository.findOneBy({ userId })
   }
 
   async findUserByEmailAndPassword(email: string)
   {
     return await this.userRepository.findOne({
-      select: ['user_id', 'email', 'password', 'name', 'grade', 'signup_type'],
+      select: ['userId', 'email', 'password', 'name', 'grade', 'signup_type'],
       where: [{ email }],
     });
   }
