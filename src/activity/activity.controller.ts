@@ -9,6 +9,7 @@ import {
   Req,
   UseGuards,
   NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
@@ -44,10 +45,18 @@ export class ActivityController {
   async update(
     @Param('activityId') activity_id: number,
     @Body() updateActivityDto: UpdateActivityDto,
+    @Req() req: any,
   ) {
+    const { user_id } = req.user;
+
     const activity = await this.activityService.findOne(+activity_id);
+
     if (!activity) {
       throw new NotFoundException('댓글이 존재하지 않습니다.');
+    }
+
+    if (activity.user_id !== user_id) {
+      throw new ForbiddenException('권한이 없습니다.');
     }
 
     await this.activityService.update(+activity_id, updateActivityDto);
@@ -57,10 +66,17 @@ export class ActivityController {
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':cardId/:activityId')
-  async delete(@Param('activityId') activity_id: number) {
+  async delete(@Param('activityId') activity_id: number, @Req() req: any) {
+    const { user_id } = req.user;
+
     const activity = await this.activityService.findOne(+activity_id);
+
     if (!activity) {
       throw new NotFoundException('댓글이 존재하지 않습니다.');
+    }
+
+    if (activity.user_id !== user_id) {
+      throw new ForbiddenException('권한이 없습니다.');
     }
 
     await this.activityService.delete(+activity_id);
