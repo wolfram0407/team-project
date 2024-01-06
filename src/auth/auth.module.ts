@@ -10,10 +10,12 @@ import { UserModule } from 'src/user/user.module';
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt', session: false }),
     JwtModule.registerAsync({
-      useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET_KEY'),
-      }),
       inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        global: true,
+        secret: config.get<string>('JWT_SECRET_KEY'),
+        signOptions: { expiresIn: '1d' },
+      })
     }),
     UserModule,
   ],

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException, Patch } from '@nestjs/common';
 
 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -38,26 +38,43 @@ export class UserService
 
   async login(email: string, password: string)
   {
-    const user = await this.findUserByEmail(email)
+    const user = await this.findUserByEmailAndPassword(email)
     if (!user)
       throw new UnauthorizedException('이메일을 확인해주세요.');
 
     if (!compareSync(password, user?.password ?? ''))
       throw new UnauthorizedException('비밀번호를 확인해주세요.');
 
-    const payload = { sub: user.user_id, tokenType: 'access' };
+    const payload = { sub: user.userId, tokenType: 'access' };
     return {
       accessToken: this.jwtService.sign(payload, { expiresIn: '1d' })
     };
 
   }
 
-
-
-
-  async findUserById(user_id: number)
+  async updateUserInfo(userId: number, name: string)
   {
-    return await this.userRepository.findOneBy({ user_id })
+    const updated = await this.userRepository.update({ userId }, { name })
+
+    return updated;
+  }
+
+  async deleteUser(userId: number)
+  {
+    return await this.userRepository.softDelete({ userId })
+  }
+
+  async findUserById(userId: number)
+  {
+    return await this.userRepository.findOneBy({ userId })
+  }
+
+  async findUserByEmailAndPassword(email: string)
+  {
+    return await this.userRepository.findOne({
+      select: ['userId', 'email', 'password', 'name', 'grade', 'signup_type'],
+      where: [{ email }],
+    });
   }
   async findUserByEmail(email: string)
   {
