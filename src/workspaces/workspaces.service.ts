@@ -3,20 +3,34 @@ import { ReqCreateWorkspaceDto, ReqUpdateWorkspacesDto } from './dto/req.workspa
 import { User } from 'src/user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Workspace } from './entities/workspace.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
+import { WorkspaceMember } from 'src/workspace-members/entities/workspace-member.entity';
+import { WorkspaceMemberRole } from 'src/common/types/work-member-role.type';
 
 @Injectable()
 export class WorkspaceService {
   constructor(
     @InjectRepository(Workspace)
     private readonly workspaceRepository: Repository<Workspace>,
+    private readonly entityManager: EntityManager,
   ) {}
 
   async create(createWorkspaceDto: ReqCreateWorkspaceDto, user: User) {
     const { userId } = user;
-    await this.workspaceRepository.save({
-      ...createWorkspaceDto,
-      userId,
+    // 트랜잭션 사용하여 워크스페이스 생성과 함께 워크스페이스 멤버에 추가
+    await this.entityManager.transaction(async (transactionEntityManager) => {
+      // 1. 워크스페이스 생성
+      const workspace = await transactionEntityManager.save(Workspace, {
+        ...createWorkspaceDto,
+        userId,
+      });
+
+      // 2. 워크스페이스 멤버에 추가
+      await transactionEntityManager.save(WorkspaceMember, {
+        workspaceId: workspace.workspaceId,
+        userId,
+        role: WorkspaceMemberRole.Admin,
+      });
     });
   }
 
