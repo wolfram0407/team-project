@@ -3,12 +3,20 @@ import { IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MinLength } from 'c
 
 // 워크스페이스 생성
 export class ReqCreateWorkspaceDto {
-  @ApiProperty({ required: true, example: 'Workspace_Title_1' })
+  /**
+   * 타이틀
+   * @example "Workspace1"
+   * @requires true
+   */
   @IsString()
   @IsNotEmpty({ message: '워크스페이스 제목을 입력해주세요.' })
   title: string;
 
-  @ApiProperty({ required: false, example: 'This is Workspace for 기탄신기' })
+  /**
+   * 워크스페이스 설명
+   * @example "This is Workspace of 기탄신기"
+   * @requires false
+   */
   @IsString()
   @IsOptional()
   description?: string;
