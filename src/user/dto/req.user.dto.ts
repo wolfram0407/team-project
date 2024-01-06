@@ -40,3 +40,6 @@ export class ReqCreateUserDto
 
 // 로그인
 export class ReqLoginDto extends PickType(ReqCreateUserDto, ['email', 'password'] as const) { }
+
+//  유저 정보 수정
+export class ReqUpdateUserDto extends PickType(ReqCreateUserDto, ['name'] as const) { }
