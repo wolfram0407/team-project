@@ -13,7 +13,7 @@ export class WorkspaceService {
   ) {}
 
   async create(createWorkspaceDto: ReqCreateWorkspaceDto, user: User) {
-    const { user_id: userId } = user;
+    const { userId } = user;
     await this.workspaceRepository.save({
       ...createWorkspaceDto,
       userId,
