@@ -16,8 +16,9 @@ export class Board
   @Column({ type: 'varchar', nullable: false })
   image_path: string
 
-  @Column({ type: 'enum', nullable: false, default: BoardGrade.Public })
+  @Column({ type: 'enum', enum: BoardGrade, default: BoardGrade.Public })
   visibility: BoardGrade
+
 
   @CreateDateColumn()
   created_at: Date

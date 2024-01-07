@@ -1,11 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Board } from './entities/board.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BoardService
 {
-  create()
+  constructor(
+    @InjectRepository(Board)
+    private boardRepository: Repository<Board>
+  ) { }
+  async create(userId: number, title: string, image_path: string)
   {
-    return 'This action adds a new board';
+    const board = await this.boardRepository.save({
+      title,
+      image_path
+    })
+    return board
   }
 
   findAll()
