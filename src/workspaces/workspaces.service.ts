@@ -20,7 +20,7 @@ export class WorkspaceService {
     // 트랜잭션 사용하여 워크스페이스 생성과 함께 워크스페이스 멤버에 추가
     await this.entityManager.transaction(async (transactionEntityManager) => {
       // 1. 워크스페이스 생성
-      const workspace = await transactionEntityManager.save(Workspace, {
+      const workspace: Workspace = await transactionEntityManager.save(Workspace, {
         ...createWorkspaceDto,
         userId,
       });
@@ -34,8 +34,15 @@ export class WorkspaceService {
     });
   }
 
-  findAll() {
-    return `This action returns all workspace`;
+  async findAll(userId: number) {
+    const workspaces: Workspace[] = await this.workspaceRepository
+      .createQueryBuilder('workspace')
+      .leftJoinAndSelect('workspace.workspaceMembers', 'wm')
+      .select(['workspace.workspaceId', 'workspace.title', 'workspace.description'])
+      .where('wm.userId=:userId', { userId })
+      .getMany();
+
+    return workspaces;
   }
 
   findOne(id: number) {

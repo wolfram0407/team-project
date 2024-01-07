@@ -5,6 +5,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UserInfo } from 'src/common/decorator/user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { Workspace } from './entities/workspace.entity';
 
 @ApiTags('Workspace')
 @ApiBearerAuth()
@@ -26,9 +27,21 @@ export class WorkspaceController {
     };
   }
 
+  /**
+   * 워크스페이스 조회(내가 소속된 모든 워크스페이스)
+   * @returns
+   */
   @Get()
-  findAll() {
-    return this.workspaceService.findAll();
+  async findAll(
+    @UserInfo()
+    user: User,
+  ) {
+    const workspaces: Workspace[] = await this.workspaceService.findAll(user.userId);
+    return {
+      success: 'true',
+      message: '워크스페이스 조회 성공',
+      data: workspaces,
+    };
   }
 
   @Get(':id')
