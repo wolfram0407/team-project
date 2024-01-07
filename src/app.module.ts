@@ -6,6 +6,7 @@ import { typeOrmModuleOptions } from './config/database.config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { BoardModule } from './board/board.module';
+import { BoardMembersModule } from './board_members/board_members.module';
 
 
 
@@ -19,6 +20,7 @@ import { BoardModule } from './board/board.module';
     UserModule,
     AuthModule,
     BoardModule,
+    BoardMembersModule,
   ],
   controllers: [],
   providers: [],

@@ -1,5 +1,6 @@
+import { BoardMember } from "src/board_members/entities/board_members.entity"
 import { BoardGrade } from "src/common/types/boardGrade.type"
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 @Entity({
   name: "boards",
@@ -8,7 +9,7 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedCol
 export class Board
 {
   @PrimaryGeneratedColumn()
-  board_id: number
+  boardId: number
 
   @Column({ type: 'varchar', nullable: false })
   title: string
@@ -27,4 +28,6 @@ export class Board
   @DeleteDateColumn()
   deleted_at: Date
 
+  @OneToMany(() => BoardMember, (boardMember) => boardMember.board)
+  boardMemberId: BoardMember[]
 }

@@ -1,5 +1,6 @@
+import { BoardMember } from "src/board_members/entities/board_members.entity"
 import { UserGrade } from "src/common/types/userGrade.type"
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 
 @Entity({
@@ -33,5 +34,10 @@ export class User
   updated_at: Date
   @DeleteDateColumn()
   deleted_at: Date
+
+
+  @OneToOne(() => BoardMember, (boardMember) => boardMember.user)
+  board_member: BoardMember
+
 
 }

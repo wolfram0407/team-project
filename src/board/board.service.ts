@@ -12,11 +12,12 @@ export class BoardService
   ) { }
   async create(userId: number, title: string, image_path: string)
   {
-    const board = await this.boardRepository.save({
-      title,
-      image_path
-    })
-    return board
+    // const board = await this.boardRepository.save({
+    //   title,
+    //   image_path
+    // })
+
+    return "!"
   }
 
   findAll()
