@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { ReqCreateWorkspaceDto, ReqUpdateWorkspacesDto } from './dto/req.workspace.dto';
 import { User } from 'src/user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -45,8 +45,25 @@ export class WorkspaceService {
     return workspaces;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} workspace`;
+  async findOne(workspaceId: number, userId: number) {
+    const workspace: Workspace = await this.workspaceRepository
+      .createQueryBuilder('workspace')
+      .leftJoinAndSelect('workspace.workspaceMembers', 'wm')
+      .select(['workspace.workspaceId', 'workspace.title', 'workspace.description', 'wm.userId'])
+      .where('wm.workspaceId=:workspaceId', { workspaceId })
+      .getOne();
+
+    if (!workspace) {
+      throw new NotFoundException('해당하는 워크스페이스를 찾을 수 없습니다.');
+    }
+
+    // 해당 워크스페이스에 해당하는 사람이 아니면 조회 불가 !
+    const isMember: boolean = this.checkMember(userId, workspace.workspaceMembers);
+    if (!isMember) {
+      throw new UnauthorizedException('해당 워크스페이스의 소속된 멤버가 아닙니다.');
+    }
+
+    return workspace;
   }
 
   update(id: number, updateWorkspaceDto: ReqUpdateWorkspacesDto) {
@@ -55,5 +72,14 @@ export class WorkspaceService {
 
   remove(id: number) {
     return `This action removes a #${id} workspace`;
+  }
+
+  checkMember(userId: number, workspaceMemebers: WorkspaceMember[]) {
+    for (const member of workspaceMemebers) {
+      if (member.userId === userId) {
+        return true;
+      }
+    }
+    return false;
   }
 }

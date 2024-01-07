@@ -43,10 +43,20 @@ export class WorkspaceController {
       data: workspaces,
     };
   }
-
+  /**
+   * 특정 워크스페이스 조회
+   * @param id
+   * @param user
+   * @returns
+   */
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.workspaceService.findOne(+id);
+  async findOne(@Param('id') id: number, @UserInfo() user: User) {
+    const workspace = await this.workspaceService.findOne(id, user.userId);
+    return {
+      success: 'true',
+      message: '워크스페이스 조회 성공',
+      data: workspace,
+    };
   }
 
   @Patch(':id')
