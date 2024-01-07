@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleOptions } from './config/database.config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-
-
+import { WorkspaceModule } from './workspaces/workspaces.module';
+import { WorkspaceMembersModule } from './workspace-members/workspace-members.module';
 
 @Module({
   imports: [
@@ -17,8 +17,10 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UserModule,
     AuthModule,
+    WorkspaceModule,
+    WorkspaceMembersModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
