@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -50,8 +51,11 @@ export class Workspace {
   deletedAt: Date;
 
   @ManyToOne(() => User, (user) => user.workspaces, { onDelete: 'NO ACTION' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @OneToMany(() => WorkspaceMember, (workspaceMember) => workspaceMember.workspace)
+  @OneToMany((type) => WorkspaceMember, (workspaceMember) => workspaceMember.workspace, {
+    cascade: ['soft-remove'],
+  })
   workspaceMembers: WorkspaceMember[];
 }
