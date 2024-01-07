@@ -7,6 +7,7 @@ import { BoardMember } from './entities/board_members.entity';
   imports: [
     TypeOrmModule.forFeature([BoardMember])
   ],
-  providers: [BoardMembersService]
+  providers: [BoardMembersService],
+  exports: [BoardMembersService]
 })
 export class BoardMembersModule { }

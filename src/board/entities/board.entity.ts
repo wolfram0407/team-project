@@ -28,6 +28,6 @@ export class Board
   @DeleteDateColumn()
   deleted_at: Date
 
-  @OneToMany(() => BoardMember, (boardMember) => boardMember.board)
+  @OneToMany(() => BoardMember, (boardMember) => boardMember.boards)
   boardMemberId: BoardMember[]
 }

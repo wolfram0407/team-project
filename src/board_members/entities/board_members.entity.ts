@@ -13,10 +13,6 @@ export class BoardMember
   @PrimaryGeneratedColumn()
   boardMemberId: number
 
-  @Column({ type: 'varchar', nullable: false })
-  boardId: number
-
-
 
   @Column({ type: 'enum', enum: BoardMemberRole, default: BoardMemberRole.Member })
   role: BoardMemberRole
@@ -30,13 +26,12 @@ export class BoardMember
   deleted_at: Date
 
 
-  @OneToOne(() => User, (user) => user.board_member)
+  @ManyToOne(() => User, (user) => user.boardMember)
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Board, (board) => board.boardId)
+  @ManyToOne(() => Board, (board) => board.boardMemberId)
   @JoinColumn({ name: 'board_id' })
-  board: Board
-
+  boards: Board
 
 }
