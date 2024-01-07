@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UseGuards, Put } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiTags } from '@nestjs/swagger';
-import { ReqCreateUserDto, ReqLoginDto } from './dto/req.user.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ReqCreateUserDto, ReqLoginDto, ReqUpdateUserDto } from './dto/req.user.dto';
+import { UserInfo } from 'src/common/decorator/user.decorator';
+import { User } from './entities/user.entity';
 
 
 @ApiTags('User')

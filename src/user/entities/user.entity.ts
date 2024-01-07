@@ -1,7 +1,7 @@
 import { UserGrade } from "src/common/types/userGrade.type"
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
-``
+
 @Entity({
   name: "users",
 })
