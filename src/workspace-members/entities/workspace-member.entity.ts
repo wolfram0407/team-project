@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
@@ -44,8 +45,10 @@ export class WorkspaceMember {
   deletedAt: Date;
 
   @ManyToOne(() => User, (user) => user.workspaceMembers, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @ManyToOne(() => Workspace, (workspace) => workspace.workspaceMembers, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'workspace_id' })
   workspace: Workspace;
 }
