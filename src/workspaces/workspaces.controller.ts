@@ -6,9 +6,13 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserInfo } from 'src/common/decorator/user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { Workspace } from './entities/workspace.entity';
+import { WorkspaceMemberRolesGuard } from 'src/auth/work-member-roles.guard';
+import { WorkspaceMemberRole } from 'src/common/types/work-member-role.type';
+import { Roles } from 'src/common/decorator/role.decorator';
 
 @ApiTags('Workspace')
 @ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('workspaces')
 export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
@@ -17,7 +21,6 @@ export class WorkspaceController {
    * @param createWorkspaceDto
    * @returns
    */
-  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() createWorkspaceDto: ReqCreateWorkspaceDto, @UserInfo() user: User) {
     await this.workspaceService.create(createWorkspaceDto, user);
@@ -59,9 +62,25 @@ export class WorkspaceController {
     };
   }
 
+  /**
+   * 특정 워크스페이스 수정
+   * @param id
+   * @param updateWorkspaceDto
+   * @returns
+   */
+  @UseGuards(WorkspaceMemberRolesGuard)
+  @Roles(WorkspaceMemberRole.Admin)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWorkspaceDto: ReqUpdateWorkspacesDto) {
-    return this.workspaceService.update(+id, updateWorkspaceDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateWorkspaceDto: ReqUpdateWorkspacesDto,
+    @UserInfo() user: User,
+  ) {
+    await this.workspaceService.update(id, updateWorkspaceDto, user.userId);
+    return {
+      success: 'true',
+      message: '워크스페이스 수정 성공',
+    };
   }
 
   @Delete(':id')

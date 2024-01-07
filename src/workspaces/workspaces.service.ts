@@ -66,8 +66,27 @@ export class WorkspaceService {
     return workspace;
   }
 
-  update(id: number, updateWorkspaceDto: ReqUpdateWorkspacesDto) {
-    return `This action updates a #${id} workspace`;
+  async update(workspaceId: number, updateWorkspaceDto: ReqUpdateWorkspacesDto, userId: number) {
+    const { title, description } = updateWorkspaceDto;
+
+    const workspace = await this.findOne(workspaceId, userId);
+
+    if (!workspace) {
+      throw new NotFoundException('해당하는 워크스페이스를 찾을 수 없습니다.');
+    }
+
+    const newTitle: string = title ? title : workspace.title;
+    const newDescription: string = description ? description : workspace.description;
+
+    await this.workspaceRepository.update(
+      {
+        workspaceId,
+      },
+      {
+        title: newTitle,
+        description: newDescription,
+      },
+    );
   }
 
   remove(id: number) {
