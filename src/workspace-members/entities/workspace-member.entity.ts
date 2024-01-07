@@ -48,7 +48,10 @@ export class WorkspaceMember {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToOne(() => Workspace, (workspace) => workspace.workspaceMembers, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'workspace_id' })
+  @ManyToOne(() => Workspace, (workspace) => workspace.workspaceMembers)
+  @JoinColumn({
+    name: 'workspace_id',
+    referencedColumnName: 'workspaceId',
+  })
   workspace: Workspace;
 }

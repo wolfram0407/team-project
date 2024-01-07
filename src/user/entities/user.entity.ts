@@ -45,6 +45,8 @@ export class User {
   @OneToMany(() => Workspace, (worksapce) => worksapce.user)
   workspaces: Workspace[];
 
-  @OneToMany(() => WorkspaceMember, (workspaceMember) => workspaceMember.user)
+  @OneToMany(() => WorkspaceMember, (workspaceMember) => workspaceMember.user, {
+    cascade: ['soft-remove'],
+  })
   workspaceMembers: Workspace[];
 }

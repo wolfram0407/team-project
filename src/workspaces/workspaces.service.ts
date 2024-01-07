@@ -71,10 +71,6 @@ export class WorkspaceService {
 
     const workspace = await this.findOne(workspaceId, userId);
 
-    if (!workspace) {
-      throw new NotFoundException('해당하는 워크스페이스를 찾을 수 없습니다.');
-    }
-
     const newTitle: string = title ? title : workspace.title;
     const newDescription: string = description ? description : workspace.description;
 
@@ -89,8 +85,13 @@ export class WorkspaceService {
     );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} workspace`;
+  async remove(workspaceId: number, userId: number) {
+    const workspace = await this.workspaceRepository.findOne({
+      where: { workspaceId, userId },
+      relations: ['workspaceMembers'],
+    });
+
+    await this.workspaceRepository.softRemove(workspace);
   }
 
   checkMember(userId: number, workspaceMemebers: WorkspaceMember[]) {

@@ -83,8 +83,19 @@ export class WorkspaceController {
     };
   }
 
+  /**
+   * 특정 워크스페이스 삭제
+   * @param id
+   * @returns
+   */
+  @UseGuards(WorkspaceMemberRolesGuard)
+  @Roles(WorkspaceMemberRole.Admin)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.workspaceService.remove(+id);
+  async remove(@Param('id') id: number, @UserInfo() user: User) {
+    await this.workspaceService.remove(id, user.userId);
+    return {
+      success: 'true',
+      message: '워크스페이스 삭제 성공',
+    };
   }
 }
