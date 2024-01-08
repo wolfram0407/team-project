@@ -29,9 +29,12 @@ export class BoardMember
   @ManyToOne(() => User, (user) => user.boardMember)
   @JoinColumn({ name: 'user_id' })
   user: User;
+  @Column()
+  user_id: number
 
-  @ManyToOne(() => Board, (board) => board.boardMemberId)
+  @ManyToOne(() => Board, (board) => board.boardMember)
   @JoinColumn({ name: 'board_id' })
   boards: Board
-
+  @Column()
+  board_id: number
 }

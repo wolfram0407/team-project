@@ -29,5 +29,5 @@ export class Board
   deleted_at: Date
 
   @OneToMany(() => BoardMember, (boardMember) => boardMember.boards)
-  boardMemberId: BoardMember[]
+  boardMember: BoardMember[]
 }

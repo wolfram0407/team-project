@@ -24,16 +24,22 @@ export class BoardController
     return this.boardService.create(userId, title, image_path);
   }
 
+  @ApiBearerAuth()
   @Get()
-  findAll()
+  findAll(@UserInfo() { userId }: User,)
   {
-    return this.boardService.findAll();
+    return this.boardService.findAll(userId);
   }
 
+
+  @ApiBearerAuth()
   @Get(':id')
-  findOne(@Param('id') id: string)
+  findOne(
+    @Param('id') id: string,
+    @UserInfo() { userId }: User,
+  )
   {
-    return this.boardService.findOne(+id);
+    return this.boardService.findOne(+id, userId);
   }
 
 }
