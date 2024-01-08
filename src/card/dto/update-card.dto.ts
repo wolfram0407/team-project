@@ -1,6 +1,15 @@
 import { IsBoolean, IsDate, IsDateString, IsOptional, IsString } from "class-validator";
 
 export class UpdateCardDto {
+  
+  /**
+   * 타이틀
+   * @example "수정된 제목 입니다"
+   */
+  @IsOptional()
+  @IsString()
+  title?: string;
+  
   /**
    * 설명
    * @example "카드 설명 입니다."

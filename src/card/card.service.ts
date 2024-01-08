@@ -30,16 +30,22 @@ export class CardService {
     })
   }
 
-  findAll() {
-    return `This action returns all card`;
+  async findAll(listId: number) {
+    const cards =  await this.cardRepository.find({
+      where: {listId}
+    });
+
+    return cards
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} card`;
+  async findOne(id: number) {
+    const card = await this.cardRepository.findOneBy({id})
+   
+    return card
   }
 
   async update(id: number, updateCardDto: UpdateCardDto) {
-    const {description, notice, label, start_date, end_date, image_path} = updateCardDto;  
+    const {title, description, notice, label, start_date, end_date, image_path} = updateCardDto;  
   
     const card = await this.cardRepository.findOne({
       where: {id}
@@ -50,14 +56,22 @@ export class CardService {
     }
     
     const updatedCard = await this.dataSource.createQueryBuilder().update(Card).set({
-      description, notice, label, start_date, end_date, image_path     
+      title, description, notice, label, start_date, end_date, image_path     
     }).where(`id= ${id}`).execute()
     
     
     return updatedCard;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} card`;
+  async remove(id: number) {
+    const card = await this.cardRepository.findOne({where: {id}})
+    
+    if(!card){
+      return await this.cardRepository.restore(id)
+    }
+    
+    const deletedCard = await this.cardRepository.softDelete({id})
+
+    return deletedCard;
   }
 }
