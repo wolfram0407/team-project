@@ -5,10 +5,11 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-// import { APP_GUARD } from '@nestjs/core';
-// import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { WorkspaceModule } from 'src/workspaces/workspaces.module';
 
 @Module({
   imports: [

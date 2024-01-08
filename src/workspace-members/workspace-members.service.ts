@@ -40,8 +40,14 @@ export class WorkspaceMembersService {
     });
   }
 
-  findAll() {
-    return `This action returns all workspaceMembers`;
+  async findAll(workspaceId: number) {
+    const members: WorkspaceMember[] = await this.workspaceMemberRepository
+      .createQueryBuilder('wm')
+      .leftJoinAndSelect('wm.user', 'u')
+      .select(['wm.workspaceId', 'wm.role', 'u.userId', 'u.email', 'u.name'])
+      .where('wm.workspaceId=:workspaceId', { workspaceId })
+      .getMany();
+    return members;
   }
 
   async findMemberByWorkspaceIdAndUserId(workspaceId: number, userId: number) {

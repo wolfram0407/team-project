@@ -1,3 +1,4 @@
+import { BoardMember } from 'src/board_members/entities/board_members.entity';
 import { UserGrade } from 'src/common/types/userGrade.type';
 import { WorkspaceMember } from 'src/workspace-members/entities/workspace-member.entity';
 import { Workspace } from 'src/workspaces/entities/workspace.entity';
@@ -6,7 +7,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  // Index,
+  Index,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -47,5 +49,8 @@ export class User {
   @OneToMany(() => WorkspaceMember, (workspaceMember) => workspaceMember.user, {
     cascade: ['soft-remove'],
   })
-  workspaceMembers: Workspace[];
+  workspaceMembers: WorkspaceMember[];
+
+  @ManyToOne(() => BoardMember, (boardMember) => boardMember.user)
+  boardMember: BoardMember[];
 }
