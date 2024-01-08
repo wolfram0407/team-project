@@ -4,13 +4,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Card } from './entities/card.entity';
 import { DataSource, Repository } from 'typeorm';
 import { List } from 'src/list/entities/list.entity';
+import { CardMember } from './entities/card-member.entity';
 
 @Injectable()
 export class CardService {
   constructor(
     private readonly dataSource: DataSource,
     @InjectRepository(Card) private readonly cardRepository:Repository<Card>,
-    @InjectRepository(List) private readonly listRepository:Repository<List>,  
+    @InjectRepository(List) private readonly listRepository:Repository<List>, 
+    @InjectRepository(CardMember) private readonly cardMemberRepository:Repository<CardMember> 
   ){
   }
 
@@ -27,6 +29,13 @@ export class CardService {
     await this.cardRepository.save({
       title,
       listId,
+    })
+  }
+
+  async addBoardMember(cardId: number, boardMemberId: number){
+    return await this.cardMemberRepository.save({
+      card_id: cardId,
+      board_member_id: boardMemberId
     })
   }
 
@@ -74,4 +83,10 @@ export class CardService {
 
     return deletedCard;
   }
+
+  async removeCardMember(id: number){
+    await this.cardMemberRepository.delete({id})
+    
+  }
+
 }

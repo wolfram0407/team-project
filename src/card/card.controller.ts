@@ -31,6 +31,26 @@ export class CardController {
   }
 
   /**
+   * 카드 멤버 추가
+   * @param cardId 
+   * @param boardMemberId 
+   * @returns 
+   */
+  @ApiBearerAuth()
+  @Post("/card/:cardId/:boardMemberId")
+  async addBoardMember(@Param("cardId") cardId:number,
+    @Param("boardMemberId") boardMemberId:number
+  ){
+    const data = await this.cardService.addBoardMember(cardId, boardMemberId);    
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: '보드 멤버 추가',
+      data,
+    }
+  }
+
+  /**
    * 리스트안에 카드들 조회
    * @param listId 
    * @returns 
@@ -97,6 +117,19 @@ export class CardController {
       statusCode: HttpStatus.OK,
       message: '카드 삭제',
       data,
+    }
+  }
+
+
+  @ApiBearerAuth()
+  @Delete("/card/:cardMemberId")
+  async removeCardMember(@Param("cardMemberid") id:number){
+    await this.cardService.removeCardMember(id);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: '카드 멤버 제거',
+  
     }
   }
 }
