@@ -13,10 +13,11 @@ import {
 } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 @UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 @ApiTags('Activity')
 @Controller()
 export class ActivityController {
