@@ -1,10 +1,12 @@
-import { HttpStatus, Injectable, NotAcceptableException } from '@nestjs/common';
+import { Board } from 'src/board/entities/board.entity';
+import { HttpStatus, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Board } from './entities/board.entity';
-import { Repository, createQueryBuilder } from 'typeorm';
+
+import { Repository, } from 'typeorm';
 import { BoardMember } from 'src/board_members/entities/board_members.entity';
 import { BoardMemberRole } from 'src/common/types/boardMember.type';
 import { BoardMembersService } from 'src/board_members/board_members.service';
+import { BoardGrade } from 'src/common/types/boardGrade.type';
 
 
 @Injectable()
@@ -65,22 +67,81 @@ export class BoardService
       .getMany()
 
 
-    /*
-    const board = await this.boardRepository.findOne({
+    return board
+  }
 
-      relations: {
-        boardMemberId: true,
-      },
-      where: {
-        boardId: id,
-        boardMemberId: {
-          user: { userId }3
-        }
-      }
-    })
-*/
+
+  async searchBoard(search: string)
+  {
+    const board = await this.boardRepository
+      .createQueryBuilder("boards")
+      .where("boards.title like :search", { search: `%${search}%` })
+      .getMany()
+
 
     return board
   }
+
+  async updateBoard(id: number, title: string, image_path: string)
+  {
+    const board = await this.boardRepository.findOne({
+      where: { boardId: id },
+    })
+    if (!board)
+    {
+      throw new NotFoundException()
+    }
+
+    const updateBoard = await this.boardRepository.update({ boardId: id, }, {
+      title,
+      image_path,
+    })
+    if (!updateBoard)
+    {
+      // 디비 에러 처리 필요!
+      throw new NotFoundException()
+    }
+    return {
+      message: 'Board updated successfully'
+    }
+
+  }
+
+
+  async deleteBoard(id: number, userId: number)
+  {
+    const board = await this.boardRepository
+      .createQueryBuilder("boards")
+      .leftJoinAndSelect("boards.boardMember", "boardMember")
+      .where("boards.boardId = :id", { id })
+      .getOne()
+
+    if (!board)
+    {
+      throw new NotFoundException()
+    }
+
+    if (board.boardMember[0].role == BoardMemberRole.Admin)
+    {
+      //보드 삭제
+      const deleteBoard = await this.boardRepository.softDelete({
+        boardId: id
+      })
+      if (!deleteBoard)
+      {
+        // 디비 에러 처리 필요!
+        throw new NotFoundException()
+      }
+      return {
+        message: 'Board deleted successfully'
+      }
+    }
+
+    // 보드 떠나기(테스트 필요)
+    return await this.boardMembersService.deleteMember(id, userId)
+  }
+
+
+
 
 }

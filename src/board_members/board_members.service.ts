@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardMember } from './entities/board_members.entity';
 import { Repository } from 'typeorm';
@@ -24,7 +24,6 @@ export class BoardMembersService
     })
     const boardMember = await this.boardMembersRepository.save(member)
 
-
     return boardMember
   }
 
@@ -33,7 +32,33 @@ export class BoardMembersService
   // 보드 아이디로 멤버 조회
 
 
-  // 
+  // 보드 멤버 탈퇴
+  async deleteMember(boardId: number, userId: number)
+  {
+    const checkBoardMember = await this.boardMembersRepository.findOne({
+      where: {
+        user_id: userId,
+        board_id: boardId
+      }
+    })
+    if (!checkBoardMember)
+    {
+      throw new NotFoundException()
+    }
+
+    const deleteMember = await this.boardMembersRepository.softDelete({
+      boardMemberId: checkBoardMember.boardMemberId,
+      user_id: userId,
+    })
+    if (!deleteMember)
+    {
+      // 에러처리 필요!
+      throw new NotFoundException('에러수정 필요!')
+    }
+    return {
+      message: 'successfully deleted member '
+    }
+  }
 
 
 }

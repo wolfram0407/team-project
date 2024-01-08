@@ -1,6 +1,6 @@
 export enum BoardMemberRole
 {
-  Member,
   Observer,
+  Member,
   Admin,
 }
