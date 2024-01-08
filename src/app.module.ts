@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmModuleOptions } from './config/database.config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { WorkspaceModule } from './workspaces/workspaces.module';
+import { WorkspaceMembersModule } from './workspace-members/workspace-members.module';
 import { BoardModule } from './board/board.module';
 import { BoardMembersModule } from './board_members/board_members.module';
 
@@ -19,8 +21,6 @@ import { BoardMembersModule } from './board_members/board_members.module';
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UserModule,
     AuthModule,
-    BoardModule,
-    BoardMembersModule,
   ],
   controllers: [],
   providers: [],
