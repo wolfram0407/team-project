@@ -37,14 +37,21 @@ export class ActivityController {
     // }
 
     await this.activityService.create(CreateActivityDto, cardId, userId);
-    return { message: '댓글이 생성되었습니다.' };
+    return {
+      success: 'true',
+      message: '댓글 생성 완료',
+    };
   }
 
   @Get(':cardId')
   async findAll(@Param('cardId') cardId: number) {
     const activity = await this.activityService.findAll(cardId);
 
-    return { activity, message: '댓글이 조회되었습니다.' };
+    return {
+      success: 'true',
+      message: '댓글 조회 완료',
+      data: activity,
+    };
   }
 
   @Patch(':cardId/:activityId')
@@ -67,7 +74,10 @@ export class ActivityController {
 
     await this.activityService.update(+activityId, updateActivityDto);
 
-    return { message: '댓글이 수정되었습니다.' };
+    return {
+      success: 'true',
+      message: '댓글 수정 완료',
+    };
   }
 
   @Delete(':cardId/:activityId')
@@ -85,7 +95,9 @@ export class ActivityController {
     }
 
     await this.activityService.delete(+activityId);
-
-    return { message: '댓글이 삭제되었습니다.' };
+    return {
+      success: 'true',
+      message: '워크스페이스 삭제 완료',
+    };
   }
 }
