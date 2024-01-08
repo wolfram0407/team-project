@@ -7,6 +7,10 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { WorkspaceModule } from './workspaces/workspaces.module';
 import { WorkspaceMembersModule } from './workspace-members/workspace-members.module';
+import { BoardModule } from './board/board.module';
+import { BoardMembersModule } from './board_members/board_members.module';
+
+
 
 @Module({
   imports: [
@@ -17,10 +21,8 @@ import { WorkspaceMembersModule } from './workspace-members/workspace-members.mo
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UserModule,
     AuthModule,
-    WorkspaceModule,
-    WorkspaceMembersModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

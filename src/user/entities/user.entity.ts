@@ -1,22 +1,11 @@
-import { UserGrade } from 'src/common/types/userGrade.type';
-import { WorkspaceMember } from 'src/workspace-members/entities/workspace-member.entity';
-import { Workspace } from 'src/workspaces/entities/workspace.entity';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  Index,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { UserGrade } from "src/common/types/userGrade.type"
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
-``;
 @Entity({
   name: 'users',
 })
-export class User {
+export class User
+{
   @PrimaryGeneratedColumn()
   userId: number;
 
@@ -49,4 +38,9 @@ export class User {
     cascade: ['soft-remove'],
   })
   workspaceMembers: Workspace[];
+
+  @ManyToOne(() => BoardMember, (boardMember) => boardMember.user)
+  boardMember: BoardMember[]
+
+
 }
