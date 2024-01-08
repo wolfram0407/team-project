@@ -15,7 +15,7 @@ export class WorkspaceService {
     private readonly entityManager: EntityManager,
   ) {}
 
-  async create(createWorkspaceDto: ReqCreateWorkspaceDto, user: User) {
+  async createNewWorkspace(createWorkspaceDto: ReqCreateWorkspaceDto, user: User) {
     const { userId } = user;
     // 트랜잭션 사용하여 워크스페이스 생성과 함께 워크스페이스 멤버에 추가
     await this.entityManager.transaction(async (transactionEntityManager) => {
@@ -34,23 +34,24 @@ export class WorkspaceService {
     });
   }
 
-  async findAll(userId: number) {
+  async findAllWorkspaceByUserId(userId: number) {
     const workspaces: Workspace[] = await this.workspaceRepository
-      .createQueryBuilder('workspace')
-      .leftJoinAndSelect('workspace.workspaceMembers', 'wm')
-      .select(['workspace.workspaceId', 'workspace.title', 'workspace.description'])
+      .createQueryBuilder('w')
+      .leftJoinAndSelect('w.workspaceMembers', 'wm')
+      .select(['w.workspaceId', 'w.title', 'w.description'])
       .where('wm.userId=:userId', { userId })
       .getMany();
 
     return workspaces;
   }
 
-  async findOne(workspaceId: number, userId: number) {
+  async findOneByWorkspaceIdAndUserId(workspaceId: number, userId: number) {
     const workspace: Workspace = await this.workspaceRepository
-      .createQueryBuilder('workspace')
-      .leftJoinAndSelect('workspace.workspaceMembers', 'wm')
-      .select(['workspace.workspaceId', 'workspace.title', 'workspace.description', 'wm.userId'])
+      .createQueryBuilder('w')
+      .leftJoinAndSelect('w.workspaceMembers', 'wm')
+      .select(['w.workspaceId', 'w.title', 'w.description', 'wm.userId'])
       .where('wm.workspaceId=:workspaceId', { workspaceId })
+      .andWhere('wm.userId=:userId', { userId })
       .getOne();
 
     if (!workspace) {
@@ -60,10 +61,14 @@ export class WorkspaceService {
     return workspace;
   }
 
-  async update(workspaceId: number, updateWorkspaceDto: ReqUpdateWorkspacesDto, userId: number) {
+  async updateWorkspaceTitleOrDesc(
+    workspaceId: number,
+    updateWorkspaceDto: ReqUpdateWorkspacesDto,
+    userId: number,
+  ) {
     const { title, description } = updateWorkspaceDto;
 
-    const workspace = await this.findOne(workspaceId, userId);
+    const workspace = await this.findOneByWorkspaceIdAndUserId(workspaceId, userId);
 
     const newTitle: string = title ? title : workspace.title;
     const newDescription: string = description ? description : workspace.description;
@@ -79,7 +84,7 @@ export class WorkspaceService {
     );
   }
 
-  async remove(workspaceId: number, userId: number) {
+  async softRemoveWorkspace(workspaceId: number, userId: number) {
     const workspace = await this.workspaceRepository.findOne({
       where: { workspaceId, userId },
       relations: ['workspaceMembers'],

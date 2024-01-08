@@ -15,7 +15,10 @@ export class WorkspaceMembersService {
     private readonly userService: UserService,
   ) {}
 
-  async create(createWorkspaceMemberDto: ReqCreateWorkspaceMemberDto, workspaceId: number) {
+  async createNewWorkspaceMember(
+    createWorkspaceMemberDto: ReqCreateWorkspaceMemberDto,
+    workspaceId: number,
+  ) {
     const { email, role } = createWorkspaceMemberDto;
 
     // 트렐로 서비스의 회원 여부 검증
@@ -40,7 +43,7 @@ export class WorkspaceMembersService {
     });
   }
 
-  async findAll(workspaceId: number) {
+  async findAllMemebersInWorkspace(workspaceId: number) {
     const members: WorkspaceMember[] = await this.workspaceMemberRepository
       .createQueryBuilder('wm')
       .leftJoinAndSelect('wm.user', 'u')
@@ -85,7 +88,7 @@ export class WorkspaceMembersService {
     return members;
   }
 
-  async update(
+  async updateWorkspaceMemberRole(
     workspaceId: number,
     ReqUpdateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto,
     userId: number,
@@ -107,7 +110,7 @@ export class WorkspaceMembersService {
     );
   }
 
-  async remove(workspaceId: number, userId: number) {
+  async removeWorkspaceMember(workspaceId: number, userId: number) {
     const member = await this.findMemberByWorkspaceIdAndUserId(workspaceId, userId);
     if (!member) {
       throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
