@@ -65,6 +65,27 @@ export class WorkspaceMembersController {
   }
 
   /**
+   * 워크스페이스 내 특정 멤버 조회(email)
+   * @param workspaceId
+   * @param email
+   * @returns
+   */
+  @UseGuards(WorkspaceMemberRolesGuard)
+  @Roles(...Object.values(WorkspaceMemberRole))
+  @Get(':workspaceId/email')
+  async findMemberByEmail(
+    @Param('workspaceId') workspaceId: number,
+    @Query('email') email: string,
+  ) {
+    const member = await this.workspaceMembersService.findMemberByEmail(workspaceId, email);
+    return {
+      success: 'true',
+      message: '워크스페이스 멤버 조회 완료',
+      data: member,
+    };
+  }
+
+  /**
    * 특정 워크스페이스 전체 멤버 조회
    * @param workspaceId
    * @returns
