@@ -96,7 +96,7 @@ export class ActivityController {
     await this.activityService.delete(+activityId);
     return {
       success: 'true',
-      message: '워크스페이스 삭제 완료',
+      message: '댓글 삭제 완료',
     };
   }
 }
