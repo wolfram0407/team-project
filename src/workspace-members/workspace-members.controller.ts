@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { WorkspaceMembersService } from './workspace-members.service';
 import { ReqCreateWorkspaceMemberDto } from './dto/req.work-member.dto';
 import { ReqUpdateWorkspaceMemberDto } from './dto/req.work-member.dto';
@@ -36,6 +46,24 @@ export class WorkspaceMembersController {
   }
 
   /**
+   * 워크스페이스 내 특정 멤버들 조회(name)
+   * @param workspaceId
+   * @param name
+   * @returns
+   */
+  @UseGuards(WorkspaceMemberRolesGuard)
+  @Roles(...Object.values(WorkspaceMemberRole))
+  @Get(':workspaceId/name')
+  async findMembersByName(@Param('workspaceId') workspaceId: number, @Query('name') name: string) {
+    const members = await this.workspaceMembersService.findMembersByName(workspaceId, name);
+    return {
+      success: 'true',
+      message: '워크스페이스 멤버 조회 완료',
+      data: members,
+    };
+  }
+
+  /**
    * 특정 워크스페이스 전체 멤버 조회
    * @param workspaceId
    * @returns
@@ -52,6 +80,12 @@ export class WorkspaceMembersController {
     };
   }
 
+  /**
+   * 업데이트 해봅니다.
+   * @param id
+   * @param updateWorkspaceMemberDto
+   * @returns
+   */
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto) {
     return this.workspaceMembersService.update(+id, updateWorkspaceMemberDto);

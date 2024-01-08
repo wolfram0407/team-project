@@ -61,6 +61,30 @@ export class WorkspaceMembersService {
     return member;
   }
 
+  async findMembersByName(workspaceId: number, name: string) {
+    const members: WorkspaceMember[] = await this.workspaceMemberRepository
+      .createQueryBuilder('wm')
+      .leftJoinAndSelect('wm.user', 'u')
+      .select([
+        'wm.workspaceId',
+        'wm.userId',
+        'wm.role',
+        'u.email',
+        'u.name',
+        'wm.createdAt',
+        'wm.updatedAt',
+      ])
+      .where('wm.workspaceId=:workspaceId', { workspaceId })
+      .andWhere('u.name LIKE :name', { name: `%${name}%` })
+      .getMany();
+
+    if (!members) {
+      throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
+    }
+
+    return members;
+  }
+
   update(id: number, updateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto) {
     return `This action updates a #${id} workspaceMember`;
   }
