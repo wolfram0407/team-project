@@ -105,11 +105,14 @@ export class WorkspaceMembersService {
         role,
       },
     );
-
-    return;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} workspaceMember`;
+  async remove(workspaceId: number, userId: number) {
+    const member = await this.findMemberByWorkspaceIdAndUserId(workspaceId, userId);
+    if (!member) {
+      throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
+    }
+
+    await this.workspaceMemberRepository.softRemove(member);
   }
 }

@@ -102,8 +102,20 @@ export class WorkspaceMembersController {
     };
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.workspaceMembersService.remove(+id);
+  /**
+   * 워크스페이스 멤버 삭제
+   * @param workspaceId
+   * @param userId
+   * @returns
+   */
+  @UseGuards(WorkspaceMemberRolesGuard)
+  @Roles(WorkspaceMemberRole.Admin)
+  @Delete(':workspaceId/user')
+  async remove(@Param('workspaceId') workspaceId: number, @Query('user') userId: number) {
+    await this.workspaceMembersService.remove(workspaceId, userId);
+    return {
+      success: 'true',
+      message: '워크스페이스 멤버 삭제 완료',
+    };
   }
 }
