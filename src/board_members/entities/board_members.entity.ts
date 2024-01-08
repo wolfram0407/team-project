@@ -1,4 +1,5 @@
 import { Board } from "src/board/entities/board.entity"
+import { Card } from "src/card/entities/card.entity"
 import { BoardGrade } from "src/common/types/boardGrade.type"
 import { BoardMemberRole } from "src/common/types/boardMember.type"
 import { User } from "src/user/entities/user.entity"
@@ -37,4 +38,5 @@ export class BoardMember
   boards: Board
   @Column()
   board_id: number
+
 }

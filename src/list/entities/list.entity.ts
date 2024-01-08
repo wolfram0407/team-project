@@ -1,9 +1,11 @@
 import { IsNotEmpty, IsString } from 'class-validator';
+import { Card } from 'src/card/entities/card.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   //   ManyToOne,
   //   OneToMany,
   PrimaryGeneratedColumn,
@@ -36,8 +38,8 @@ export class List {
   @Column()
   position: number;
 
-  //   @OneToMany((type) => Card, (card) => card.list)
-  //   cards: Card[];
+  @OneToMany((type) => Card, (card) => card.list)
+  card: Card[];
 
   //   @ManyToOne((type) => Board, boardId => board.list, {onDelete: 'CASCADE'})
   //   boardId: Board;
