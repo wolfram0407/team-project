@@ -35,20 +35,21 @@ export class WorkspaceMembersController {
     };
   }
 
-  @Get()
-  findAll() {
-    return this.workspaceMembersService.findAll();
-  }
-
   /**
-   * 특정 워크스페이스의 멤버 조회
+   * 특정 워크스페이스 전체 멤버 조회
    * @param workspaceId
-   * @param user
    * @returns
    */
+  @UseGuards(WorkspaceMemberRolesGuard)
+  @Roles(...Object.values(WorkspaceMemberRole))
   @Get(':workspaceId')
-  findMyMemberInfo(@Param('workspaceId') workspaceId: number, @UserInfo() user: User) {
-    return this.workspaceMembersService.findMemberByWorkspaceIdAndUserId(workspaceId, user.userId);
+  async findAll(@Param('workspaceId') workspaceId: number) {
+    const members = await this.workspaceMembersService.findAll(workspaceId);
+    return {
+      success: 'true',
+      message: '워크스페이스 멤버 조회 완료',
+      data: members,
+    };
   }
 
   @Patch(':id')

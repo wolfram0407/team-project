@@ -10,8 +10,6 @@ import { WorkspaceMembersModule } from './workspace-members/workspace-members.mo
 import { BoardModule } from './board/board.module';
 import { BoardMembersModule } from './board_members/board_members.module';
 
-
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,8 +19,12 @@ import { BoardMembersModule } from './board_members/board_members.module';
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UserModule,
     AuthModule,
+    WorkspaceModule,
+    WorkspaceMembersModule,
+    BoardModule,
+    BoardMembersModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

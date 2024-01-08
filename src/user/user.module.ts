@@ -9,6 +9,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { WorkspaceModule } from 'src/workspaces/workspaces.module';
 
 @Module({
   imports: [
@@ -20,11 +21,11 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
         global: true,
         secret: config.get<string>('JWT_SECRET_KEY'),
         signOptions: { expiresIn: '1d' },
-      })
+      }),
     }),
   ],
   controllers: [UserController],
   providers: [JwtStrategy, UserService],
   exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}
