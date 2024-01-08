@@ -141,6 +141,7 @@ export class BoardService
     return await this.boardMembersService.deleteMember(id, userId)
   }
 
+  // 보드 멤버 추가
 
 
 

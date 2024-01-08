@@ -4,12 +4,17 @@ import { CreateBoardDto, UpdateBoardDto } from './dto/req.board';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserInfo } from 'src/common/decorator/user.decorator';
 import { User } from 'src/user/entities/user.entity';
+import { BoardMembersService } from 'src/board_members/board_members.service';
 
 @ApiTags('Board')
 @Controller('board')
 export class BoardController
 {
-  constructor(private readonly boardService: BoardService) { }
+  constructor(
+    private readonly boardService: BoardService,
+    private readonly boardMembersService: BoardMembersService,
+  ) { }
+
   // 보드 생성
   @ApiBearerAuth()
   @Post()
@@ -64,20 +69,27 @@ export class BoardController
 
   // 보드 삭제  // 일반 유저는 보드 떠나기
   @ApiBearerAuth()
-  @Delete('/delete/:id')
+  @Delete('/:id')
   deleteBoard(
     @UserInfo() { userId }: User,
     @Param('id') id: string)
   {
     return this.boardService.deleteBoard(+id, userId);
   }
-  // 보드 삭제 (최고관리자만)  
+
+
+  // 보드 멤버 조회
   @ApiBearerAuth()
-  @Delete('/:id')
-  deleteBoard2(@Param('id') id: string)
+  @Get('/getMembers/:boardId')
+  getBoardMembers(
+    @Param('boardId') boardId: string
+  )
   {
-    console.log(id)
+    return this.boardMembersService.findBoardMembers(+boardId)
+
   }
+
+  //보드 멤버 추가
 
 
 

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardMember } from './entities/board_members.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { BoardMemberRole } from 'src/common/types/boardMember.type';
 
 @Injectable()
@@ -30,6 +30,15 @@ export class BoardMembersService
   // 보드 멤버 생성
 
   // 보드 아이디로 멤버 조회
+  async findBoardMembers(boardId: number)
+  {
+    return await this.boardMembersRepository
+      .createQueryBuilder('member')
+      .where('member.deleted_at is null')
+      .andWhere('member.board_id = :boardId', { boardId: boardId })
+      .getMany()
+
+  }
 
 
   // 보드 멤버 탈퇴
