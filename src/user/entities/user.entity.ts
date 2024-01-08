@@ -1,37 +1,56 @@
-import { UserGrade } from "src/common/types/userGrade.type"
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { BoardMember } from 'src/board_members/entities/board_members.entity';
+import { UserGrade } from 'src/common/types/userGrade.type';
+import { WorkspaceMember } from 'src/workspace-members/entities/workspace-member.entity';
+import { Workspace } from 'src/workspaces/entities/workspace.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-``
 @Entity({
-  name: "users",
+  name: 'users',
 })
-
-export class User
-{
-
+export class User {
   @PrimaryGeneratedColumn()
-  user_id: number
+  userId: number;
 
   @Column({ type: 'varchar', nullable: false, unique: true })
-  email: string
+  email: string;
 
-  @Column({ type: 'varchar', /*select: false,*/ nullable: false })
-  password: string
+  @Column({ type: 'varchar', select: false, nullable: false })
+  password: string;
 
   @Column({ nullable: false })
-  name: string
+  name: string;
 
   @Column({ type: 'enum', enum: UserGrade, default: UserGrade.Free })
-  grade: UserGrade
+  grade: UserGrade;
 
-  @Column({ nullable: false, default: "local" })
-  signup_type: string
+  @Column({ nullable: false, default: 'local' })
+  signup_type: string;
 
   @CreateDateColumn()
-  created_at: Date
+  created_at: Date;
   @UpdateDateColumn()
-  updated_at: Date
+  updated_at: Date;
   @DeleteDateColumn()
-  deleted_at: Date
+  deleted_at: Date;
 
+  @OneToMany(() => Workspace, (worksapce) => worksapce.user)
+  workspaces: Workspace[];
+
+  @OneToMany(() => WorkspaceMember, (workspaceMember) => workspaceMember.user, {
+    cascade: ['soft-remove'],
+  })
+  workspaceMembers: WorkspaceMember[];
+
+  @ManyToOne(() => BoardMember, (boardMember) => boardMember.user)
+  boardMember: BoardMember[];
 }

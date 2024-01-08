@@ -1,7 +1,7 @@
 
 
 
-import { ApiProperty, PickType } from "@nestjs/swagger";
+import { ApiProperty, OmitType, PickType } from "@nestjs/swagger";
 import { IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MinLength } from "class-validator";
 
 // 회원가입
@@ -40,3 +40,6 @@ export class ReqCreateUserDto
 
 // 로그인
 export class ReqLoginDto extends PickType(ReqCreateUserDto, ['email', 'password'] as const) { }
+
+//  유저 정보 수정
+export class ReqUpdateUserDto extends PickType(ReqCreateUserDto, ['name'] as const) { }
