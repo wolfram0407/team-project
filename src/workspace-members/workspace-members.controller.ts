@@ -81,14 +81,25 @@ export class WorkspaceMembersController {
   }
 
   /**
-   * 업데이트 해봅니다.
-   * @param id
-   * @param updateWorkspaceMemberDto
+   * 워크스페이스 멤버 역할 수정
+   * @param workspaceId
+   * @param role
+   * @param userId
    * @returns
    */
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto) {
-    return this.workspaceMembersService.update(+id, updateWorkspaceMemberDto);
+  @UseGuards(WorkspaceMemberRolesGuard)
+  @Roles(WorkspaceMemberRole.Admin)
+  @Patch(':workspaceId/user')
+  async update(
+    @Param('workspaceId') workspaceId: number,
+    @Body() ReqUpdateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto,
+    @Query('user') userId: number,
+  ) {
+    await this.workspaceMembersService.update(workspaceId, ReqUpdateWorkspaceMemberDto, userId);
+    return {
+      success: 'true',
+      message: '워크스페이스 멤버 수정 완료',
+    };
   }
 
   @Delete(':id')

@@ -85,8 +85,28 @@ export class WorkspaceMembersService {
     return members;
   }
 
-  update(id: number, updateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto) {
-    return `This action updates a #${id} workspaceMember`;
+  async update(
+    workspaceId: number,
+    ReqUpdateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto,
+    userId: number,
+  ) {
+    const { role } = ReqUpdateWorkspaceMemberDto;
+    const member = await this.findMemberByWorkspaceIdAndUserId(workspaceId, userId);
+    if (!member) {
+      throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
+    }
+
+    await this.workspaceMemberRepository.update(
+      {
+        workspaceId,
+        userId,
+      },
+      {
+        role,
+      },
+    );
+
+    return;
   }
 
   remove(id: number) {
