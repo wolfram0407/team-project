@@ -14,9 +14,8 @@ import {
 import { ActivityService } from './activity.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { UpdateActivityDto } from './dto/update-activity.dto';
-@UseGuards(AuthGuard('jwt'))
+
 @ApiBearerAuth()
 @ApiTags('Activity')
 @Controller('activity')
