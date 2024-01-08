@@ -16,12 +16,11 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateActivityDto } from './dto/update-activity.dto';
-
+@UseGuards(AuthGuard('jwt'))
 @ApiTags('Activity')
 @Controller()
 export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
-  @UseGuards(AuthGuard('jwt'))
   @Post(':cardId')
   async create(
     @Body() CreateActivityDto: CreateActivityDto,
@@ -40,7 +39,6 @@ export class ActivityController {
     return { message: '댓글이 생성되었습니다.' };
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Patch(':cardId/:activityId')
   async update(
     @Param('activityId') activity_id: number,
@@ -64,7 +62,6 @@ export class ActivityController {
     return { message: '댓글이 수정되었습니다.' };
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Delete(':cardId/:activityId')
   async delete(@Param('activityId') activity_id: number, @Req() req: any) {
     const { user_id } = req.user;
