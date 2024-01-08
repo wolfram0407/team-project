@@ -25,10 +25,10 @@ export class ActivityController {
   @Post(':cardId')
   async create(
     @Body() CreateActivityDto: CreateActivityDto,
-    @Param('cardId') card_id: number,
+    @Param('cardId') cardId: number,
     @Req() req: any,
   ) {
-    const { user_id } = req.user;
+    const { userId } = req.user;
 
     // const card = await this.cardService.findOne(cardId);
 
@@ -36,48 +36,48 @@ export class ActivityController {
     //   throw new NotFoundException('카드가 존재하지 않습니다.');
     // }
 
-    await this.activityService.create(CreateActivityDto, card_id, user_id);
+    await this.activityService.create(CreateActivityDto, cardId, userId);
     return { message: '댓글이 생성되었습니다.' };
   }
 
   @Patch(':cardId/:activityId')
   async update(
-    @Param('activityId') activity_id: number,
+    @Param('activityId') activityId: number,
     @Body() updateActivityDto: UpdateActivityDto,
     @Req() req: any,
   ) {
-    const { user_id } = req.user;
+    const { userId } = req.user;
 
-    const activity = await this.activityService.findOne(+activity_id);
+    const activity = await this.activityService.findOne(+activityId);
 
     if (!activity) {
       throw new NotFoundException('댓글이 존재하지 않습니다.');
     }
 
-    if (activity.user_id !== user_id) {
+    if (activity.userId !== userId) {
       throw new ForbiddenException('권한이 없습니다.');
     }
 
-    await this.activityService.update(+activity_id, updateActivityDto);
+    await this.activityService.update(+activityId, updateActivityDto);
 
     return { message: '댓글이 수정되었습니다.' };
   }
 
   @Delete(':cardId/:activityId')
-  async delete(@Param('activityId') activity_id: number, @Req() req: any) {
-    const { user_id } = req.user;
+  async delete(@Param('activityId') activityId: number, @Req() req: any) {
+    const { userId } = req.user;
 
-    const activity = await this.activityService.findOne(+activity_id);
+    const activity = await this.activityService.findOne(+activityId);
 
     if (!activity) {
       throw new NotFoundException('댓글이 존재하지 않습니다.');
     }
 
-    if (activity.user_id !== user_id) {
+    if (activity.userId !== userId) {
       throw new ForbiddenException('권한이 없습니다.');
     }
 
-    await this.activityService.delete(+activity_id);
+    await this.activityService.delete(+activityId);
 
     return { message: '댓글이 삭제되었습니다.' };
   }

@@ -15,15 +15,15 @@ import {
 })
 export class Activity {
   @PrimaryGeneratedColumn()
-  activity_id: number;
+  activityId: number;
 
   @IsInt()
   @Column('int', { nullable: false })
-  user_id: number;
+  userId: number;
 
   @IsInt()
   @Column('int', { nullable: false })
-  card_id: number;
+  cardId: number;
 
   @IsString()
   @Column('varchar', { nullable: false })

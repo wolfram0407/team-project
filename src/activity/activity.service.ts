@@ -12,27 +12,27 @@ export class ActivityService {
     private activityRepository: Repository<Activity>,
   ) {}
 
-  async create(CreateActivityDto: CreateActivityDto, card_id: number, user_id: number) {
+  async create(CreateActivityDto: CreateActivityDto, cardId: number, userId: number) {
     if (!CreateActivityDto.content) {
       return '빈칸을 채워주세요.';
     }
 
     await this.activityRepository.save({
       content: CreateActivityDto.content,
-      card_id,
-      user_id,
+      cardId,
+      userId,
     });
   }
 
-  async findOne(activity_id: number) {
-    return await this.activityRepository.findOne({ where: { activity_id } });
+  async findOne(activityId: number) {
+    return await this.activityRepository.findOne({ where: { activityId } });
   }
 
-  async update(activity_id: number, updateActivityDto: UpdateActivityDto) {
-    await this.activityRepository.update({ activity_id }, updateActivityDto);
+  async update(activityId: number, updateActivityDto: UpdateActivityDto) {
+    await this.activityRepository.update({ activityId }, updateActivityDto);
   }
 
-  async delete(activity_id: number) {
-    await this.activityRepository.delete({ activity_id });
+  async delete(activityId: number) {
+    await this.activityRepository.delete({ activityId });
   }
 }
