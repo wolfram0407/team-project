@@ -52,6 +52,8 @@ export class WorkspaceController {
    * @param user
    * @returns
    */
+  @UseGuards(WorkspaceMemberRolesGuard)
+  @Roles(...Object.values(WorkspaceMemberRole))
   @Get(':id')
   async findOne(@Param('id') id: number, @UserInfo() user: User) {
     const workspace = await this.workspaceService.findOne(id, user.userId);

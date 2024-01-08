@@ -57,12 +57,6 @@ export class WorkspaceService {
       throw new NotFoundException('해당하는 워크스페이스를 찾을 수 없습니다.');
     }
 
-    // 해당 워크스페이스에 해당하는 사람이 아니면 조회 불가 !
-    const isMember: boolean = this.checkMember(userId, workspace.workspaceMembers);
-    if (!isMember) {
-      throw new UnauthorizedException('해당 워크스페이스의 소속된 멤버가 아닙니다.');
-    }
-
     return workspace;
   }
 
@@ -92,14 +86,5 @@ export class WorkspaceService {
     });
 
     await this.workspaceRepository.softRemove(workspace);
-  }
-
-  checkMember(userId: number, workspaceMemebers: WorkspaceMember[]) {
-    for (const member of workspaceMemebers) {
-      if (member.userId === userId) {
-        return true;
-      }
-    }
-    return false;
   }
 }
