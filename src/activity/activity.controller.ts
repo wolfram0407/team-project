@@ -19,7 +19,7 @@ import { UpdateActivityDto } from './dto/update-activity.dto';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiTags('Activity')
-@Controller()
+@Controller('activity')
 export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
   @Post(':cardId')
@@ -38,6 +38,13 @@ export class ActivityController {
 
     await this.activityService.create(CreateActivityDto, cardId, userId);
     return { message: '댓글이 생성되었습니다.' };
+  }
+
+  @Get(':cardId')
+  async findAll(@Param('cardId') cardId: number) {
+    const activity = await this.activityService.findAll(cardId);
+
+    return { activity, message: '댓글이 조회되었습니다.' };
   }
 
   @Patch(':cardId/:activityId')
