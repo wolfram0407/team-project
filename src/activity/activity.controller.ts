@@ -1,17 +1,17 @@
 import
-  {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    Req,
-    UseGuards,
-    NotFoundException,
-    ForbiddenException,
-  } from '@nestjs/common';
+{
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  UseGuards,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';

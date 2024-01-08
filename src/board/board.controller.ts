@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+=======
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+>>>>>>> 4257ff96d4628e28bfeea598c4bee00c85ab95a9
 import { BoardService } from './board.service';
 import { CreateBoardDto, UpdateBoardDto } from './dto/req.board';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserInfo } from 'src/common/decorator/user.decorator';
 import { User } from 'src/user/entities/user.entity';
+<<<<<<< HEAD
 import { BoardMembersService } from 'src/board_members/board_members.service';
 
 @ApiTags('Board')
@@ -14,16 +19,22 @@ export class BoardController
     private readonly boardService: BoardService,
     private readonly boardMembersService: BoardMembersService,
   ) { }
+=======
+import { WorkspaceGuard } from 'src/auth/workspace.guard';
+import { WorkspaceInfo } from 'src/common/decorator/workspace.decorator';
+import { Workspace } from 'src/workspaces/entities/workspace.entity';
+
+@ApiTags('Board')
+@Controller('board')
+export class BoardController {
+  constructor(private readonly boardService: BoardService) {}
+>>>>>>> 4257ff96d4628e28bfeea598c4bee00c85ab95a9
 
   // 보드 생성
   @ApiBearerAuth()
   @Post()
-  create(
-    @Body() { title, image_path }: CreateBoardDto,
-    @UserInfo() { userId }: User,
-  )
-  {
-    // 보드 생기는거 확인하고 멤버 추가 하자 
+  create(@Body() { title, image_path }: CreateBoardDto, @UserInfo() { userId }: User) {
+    // 보드 생기는거 확인하고 멤버 추가 하자
     // 유저 멤버 테이블 생성 필요(무조건 생기도록 하자)
     // 생성한 유저가 디폴트로 가입
     return this.boardService.create(userId, title, image_path);
@@ -32,21 +43,20 @@ export class BoardController
   // 등급별로 조회도 필요할듯
   @ApiBearerAuth()
   @Get()
-  findAll(@UserInfo() { userId }: User,)
-  {
+  findAll(@UserInfo() { userId }: User) {
     return this.boardService.findAll(userId);
   }
 
+<<<<<<< HEAD
   // 로그인된 유저 및 선택된 보드를 조회
+=======
+>>>>>>> 4257ff96d4628e28bfeea598c4bee00c85ab95a9
   @ApiBearerAuth()
   @Get(':id')
-  findOne(
-    @Param('id') id: string,
-    @UserInfo() { userId }: User,
-  )
-  {
+  findOne(@Param('id') id: string, @UserInfo() { userId }: User) {
     return this.boardService.findOne(+id, userId);
   }
+<<<<<<< HEAD
   // 검색
   @ApiBearerAuth()
   @Get('/find/:search')
@@ -94,4 +104,6 @@ export class BoardController
 
 
   // 보드 사용여부
+=======
+>>>>>>> 4257ff96d4628e28bfeea598c4bee00c85ab95a9
 }

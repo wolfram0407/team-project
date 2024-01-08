@@ -1,16 +1,16 @@
 import
-  {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    // Param,
-    Delete,
-    BadRequestException,
-    // UseGuards,
-    // Put,
-  } from '@nestjs/common';
+{
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  // Param,
+  Delete,
+  BadRequestException,
+  // UseGuards,
+  // Put,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ReqCreateUserDto, ReqLoginDto, ReqUpdateUserDto } from './dto/req.user.dto';
@@ -31,7 +31,7 @@ export class UserController
     if (password !== passwordCheck) throw new BadRequestException();
     return this.userService.createUser(email, password, name, signup_type);
   }
-  @Public()
+
   @Post('login')
   async login(@Body() { email, password }: ReqLoginDto)
   {
