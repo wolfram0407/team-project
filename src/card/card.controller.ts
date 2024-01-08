@@ -36,9 +36,17 @@ export class CardController {
     return this.cardService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
-    return this.cardService.update(+id, updateCardDto);
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Patch(':cardId')
+  async update(@Param('cardId') id: number, @Body() updateCardDto: UpdateCardDto) {
+    const data = await this.cardService.update(id, updateCardDto);
+  
+    return {
+      statusCode: HttpStatus.OK,
+      message: '카드 수정',
+      data,
+    }
   }
 
   @Delete(':id')

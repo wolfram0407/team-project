@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsDateString, IsNotEmpty } from "class-validator";
 import { BoardMember } from "src/board_members/entities/board_members.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { CardMember } from "./card-member.entity";
@@ -27,10 +27,12 @@ export class Card {
   @Column({nullable: true})
   label?: string;
 
-  @Column({nullable: true})
+  @IsDateString()
+  @Column({type: 'date', nullable: true})
   start_date?: Date;
   
-  @Column({nullable: true})
+  @IsDateString()
+  @Column({type: 'date', nullable: true})
   end_date?: Date;
 
   @Column({nullable: true})

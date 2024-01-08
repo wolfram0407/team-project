@@ -5,7 +5,6 @@ import { UpdateListDto } from './dto/update-list.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { string } from 'joi';
 import { MoveListDto } from './dto/move-list.dto';
-import { Public } from 'src/common/decorator/public.decorator';
 
 @ApiTags('LIST')
 @Controller(':boardId')
@@ -17,7 +16,6 @@ export class ListController {
    * @param createListDto
    * @returns
    */
-  @Public()
   @Post('column')
   create(@Body() createListDto: CreateListDto) {
     return this.listService.create(createListDto);
