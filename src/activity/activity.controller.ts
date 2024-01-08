@@ -19,7 +19,7 @@ import { UpdateActivityDto } from './dto/update-activity.dto';
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiTags('Activity')
-@Controller()
+@Controller('activity')
 export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
   @Post(':cardId')
