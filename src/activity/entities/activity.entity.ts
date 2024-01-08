@@ -1,4 +1,6 @@
 import { IsString, IsInt } from 'class-validator';
+import { Card } from 'src/card/entities/card.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -38,11 +40,15 @@ export class Activity {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  //   @ManyToOne(() => User)
-  //   @JoinColumn({ name: 'user_id' })
-  //   user: User;
+  // @ManyToOne(() => User, (user) => user.activity)
+  // @JoinColumn({ name: 'userId' })
+  // user: User;
+  // @Column()
+  // user_id: number;
 
-  //   @ManyToOne(() => Card)
-  //   @JoinColumn({ name: 'card_id' })
-  //   card: Card;
+  // @ManyToOne(() => Card, (card) => card.activity)
+  // @JoinColumn({ name: 'cardId' })
+  // card: Card;
+  // @Column()
+  // card_id: number;
 }
