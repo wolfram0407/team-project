@@ -6,13 +6,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  Index,
+  // Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-``;
 @Entity({
   name: 'users',
 })

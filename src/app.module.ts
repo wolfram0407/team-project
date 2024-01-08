@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { WorkspaceModule } from './workspaces/workspaces.module';
 import { WorkspaceMembersModule } from './workspace-members/workspace-members.module';
+import { ListModule } from './list/list.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { WorkspaceMembersModule } from './workspace-members/workspace-members.mo
     AuthModule,
     WorkspaceModule,
     WorkspaceMembersModule,
+    ListModule,
   ],
   controllers: [],
   providers: [],

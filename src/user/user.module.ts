@@ -7,8 +7,8 @@ import { User } from './entities/user.entity';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+// import { APP_GUARD } from '@nestjs/core';
+// import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
 @Module({
   imports: [
@@ -20,17 +20,11 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
         global: true,
         secret: config.get<string>('JWT_SECRET_KEY'),
         signOptions: { expiresIn: '1d' },
-      })
+      }),
     }),
   ],
   controllers: [UserController],
-  providers: [
-    JwtStrategy,
-    UserService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },],
+  providers: [JwtStrategy, UserService],
   exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}
