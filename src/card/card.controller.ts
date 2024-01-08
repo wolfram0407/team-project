@@ -120,7 +120,6 @@ export class CardController {
     }
   }
 
-
   @ApiBearerAuth()
   @Delete("/card/:cardMemberId")
   async removeCardMember(@Param("cardMemberid") id:number){
@@ -129,7 +128,6 @@ export class CardController {
     return {
       statusCode: HttpStatus.OK,
       message: '카드 멤버 제거',
-  
     }
   }
 }
