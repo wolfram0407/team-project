@@ -25,7 +25,7 @@ export class Activity {
   userId: number;
 
   @IsInt()
-  @Column('int', { nullable: false })
+  @Column('int', { nullable: false, unsigned: true })
   cardId: number;
 
   @IsString()
@@ -42,14 +42,10 @@ export class Activity {
   deletedAt?: Date;
 
   @ManyToOne(() => BoardMember, (boardMember) => boardMember.activity, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'boardMemberId' })
+  @JoinColumn({ name: 'board_member_id' })
   boardMember: BoardMember;
-  @Column()
-  boardMember_id: number;
 
   @ManyToOne(() => Card, (card) => card.activity, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'cardId' })
+  @JoinColumn({ name: 'card_id' })
   card: Card;
-  @Column()
-  card_id: number;
 }

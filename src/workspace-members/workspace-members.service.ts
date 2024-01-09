@@ -8,25 +8,22 @@ import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
-export class WorkspaceMembersService
-{
+export class WorkspaceMembersService {
   constructor(
     @InjectRepository(WorkspaceMember)
     private readonly workspaceMemberRepository: Repository<WorkspaceMember>,
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   async createNewWorkspaceMember(
     createWorkspaceMemberDto: ReqCreateWorkspaceMemberDto,
     workspaceId: number,
-  )
-  {
+  ): Promise<void> {
     const { email, role } = createWorkspaceMemberDto;
 
     // 트렐로 서비스의 회원 여부 검증
     const user: User = await this.userService.findUserByEmail(email);
-    if (!user)
-    {
+    if (!user) {
       throw new NotFoundException('해당하는 유저를 찾을 수 없습니다.');
     }
 
@@ -35,8 +32,7 @@ export class WorkspaceMembersService
       workspaceId,
       user.userId,
     );
-    if (member)
-    {
+    if (member) {
       throw new BadRequestException('이미 초대된 멤버 입니다.');
     }
 
@@ -46,9 +42,8 @@ export class WorkspaceMembersService
       role,
     });
   }
-  // 전체 조회
-  async findAllMemebersInWorkspace(workspaceId: number)
-  {
+
+  async findAllMemebersInWorkspace(workspaceId: number): Promise<WorkspaceMember[]> {
     const members: WorkspaceMember[] = await this.workspaceMemberRepository
       .createQueryBuilder('wm')
       .leftJoinAndSelect('wm.user', 'u')
@@ -58,8 +53,10 @@ export class WorkspaceMembersService
     return members;
   }
 
-  async findMemberByWorkspaceIdAndUserId(workspaceId: number, userId: number)
-  {
+  async findMemberByWorkspaceIdAndUserId(
+    workspaceId: number,
+    userId: number,
+  ): Promise<WorkspaceMember> {
     const member: WorkspaceMember = await this.workspaceMemberRepository.findOne({
       where: {
         workspaceId,
@@ -70,8 +67,7 @@ export class WorkspaceMembersService
     return member;
   }
 
-  async findMemberByEmail(workspaceId: number, email: string)
-  {
+  async findMemberByEmail(workspaceId: number, email: string): Promise<WorkspaceMember> {
     const member: WorkspaceMember = await this.workspaceMemberRepository
       .createQueryBuilder('wm')
       .leftJoinAndSelect('wm.user', 'u')
@@ -88,16 +84,14 @@ export class WorkspaceMembersService
       .andWhere('u.email= :email', { email })
       .getOne();
 
-    if (!member)
-    {
+    if (!member) {
       throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
     }
 
     return member;
   }
 
-  async findMembersByName(workspaceId: number, name: string)
-  {
+  async findMembersByName(workspaceId: number, name: string): Promise<WorkspaceMember[]> {
     const members: WorkspaceMember[] = await this.workspaceMemberRepository
       .createQueryBuilder('wm')
       .leftJoinAndSelect('wm.user', 'u')
@@ -114,8 +108,7 @@ export class WorkspaceMembersService
       .andWhere('u.name LIKE :name', { name: `%${name}%` })
       .getMany();
 
-    if (!members)
-    {
+    if (!members) {
       throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
     }
 
@@ -126,12 +119,13 @@ export class WorkspaceMembersService
     workspaceId: number,
     ReqUpdateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto,
     userId: number,
-  )
-  {
+  ): Promise<void> {
     const { role } = ReqUpdateWorkspaceMemberDto;
-    const member = await this.findMemberByWorkspaceIdAndUserId(workspaceId, userId);
-    if (!member)
-    {
+    const member: WorkspaceMember = await this.findMemberByWorkspaceIdAndUserId(
+      workspaceId,
+      userId,
+    );
+    if (!member) {
       throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
     }
 
@@ -146,11 +140,12 @@ export class WorkspaceMembersService
     );
   }
 
-  async removeWorkspaceMember(workspaceId: number, userId: number)
-  {
-    const member = await this.findMemberByWorkspaceIdAndUserId(workspaceId, userId);
-    if (!member)
-    {
+  async removeWorkspaceMember(workspaceId: number, userId: number): Promise<void> {
+    const member: WorkspaceMember = await this.findMemberByWorkspaceIdAndUserId(
+      workspaceId,
+      userId,
+    );
+    if (!member) {
       throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
     }
 
