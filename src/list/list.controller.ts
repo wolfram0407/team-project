@@ -30,16 +30,6 @@ export class ListController {
     };
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.listService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.listService.findOne(+id);
-  // }
-
   /**
    * 컬럼 수정
    * @param id

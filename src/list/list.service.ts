@@ -20,7 +20,7 @@ export class ListService {
     // Board의 존재 여부를 확인
     const board = await this.boardRepository.findOne({ where: { boardId } });
     if (!board) {
-      throw new NotFoundException(`Board with id ${boardId} not found`);
+      throw new NotFoundException('해당 보드는 존재하지 않습니다');
     }
 
     // Board가 존재하면 List 생성 진행
@@ -35,7 +35,12 @@ export class ListService {
   async update(id: number, updateListDto: UpdateListDto) {
     const listToUpdate = await this.listRepository.findOne({ where: { listId: id } });
     if (!listToUpdate) {
-      throw new NotFoundException(`List not found with id ${id}`);
+      throw new NotFoundException('해당 리스트는 존재하지 않습니다');
+    }
+
+    // 컬럼 수정 시 title 이 빈 문자열 이라면 기존의 title 을 유지함
+    if (updateListDto.title !== undefined && updateListDto.title.trim() === '') {
+      updateListDto.title = listToUpdate.title;
     }
 
     const updatedList = await this.listRepository.save({
@@ -49,11 +54,11 @@ export class ListService {
   async remove(id: number) {
     const listToRemove = await this.listRepository.findOne({ where: { listId: id } }); // findOne 으로 삭제할 컬럼 찾기
     if (!listToRemove) {
-      throw new NotFoundException(`List not found with id ${id}`);
+      throw new NotFoundException('해당 리스트는 존재하지 않습니다');
     }
 
     await this.listRepository.remove(listToRemove); // remove 메소드 사용하여 찾은 해당 컬럼 삭제
-    return { message: `List with id ${id} removed successfully` };
+    return { message: '컬럼 제거 성공' };
   }
 
   async move(listId: number, boardId: number, moveListDto: MoveListDto) {
@@ -64,7 +69,7 @@ export class ListService {
     try {
       const list = await this.listRepository.findOne({ where: { listId } });
       if (!list) {
-        throw new NotFoundException(`List not found with id ${listId}`);
+        throw new NotFoundException('해당 리스트는 존재하지 않습니다.');
       }
 
       const currentPosition = list.position;
