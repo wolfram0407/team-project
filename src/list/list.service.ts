@@ -26,7 +26,8 @@ export class ListService {
     // Board가 존재하면 List 생성 진행
     const list = await this.listRepository.save({
       ...createListDto,
-      board, // Board.entity를 직접 할당
+      boardId, // Board.entity를 직접 할당
+      position: 1,
     });
 
     return list;
@@ -111,12 +112,15 @@ export class ListService {
     queryRunner: QueryRunner,
   ) {
     for (let pos = startPos + 1; pos <= endPos; pos++) {
-      await queryRunner.manager.increment(
-        List,
-        { boardId: boardId, position: pos },
-        'position',
-        -1,
-      );
+      // 포지션 값이 1 미만으로 되지 않도록
+      if (pos - 1 >= 1) {
+        await queryRunner.manager.increment(
+          List,
+          { boardId: boardId, position: pos },
+          'position',
+          -1,
+        );
+      }
     }
   }
 
