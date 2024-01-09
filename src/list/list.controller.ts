@@ -1,12 +1,11 @@
-import { Controller, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
 import { ListService } from './list.service';
-import { CreateListDto } from './dto/create-list.dto';
-import { UpdateListDto } from './dto/update-list.dto';
-import { ApiTags } from '@nestjs/swagger';
-import { string } from 'joi';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MoveListDto } from './dto/move-list.dto';
+import { CreateListDto, UpdateListDto } from './dto/req-list.dto';
 
 @ApiTags('LIST')
+@ApiBearerAuth()
 @Controller(':boardId')
 export class ListController {
   constructor(private readonly listService: ListService) {}
@@ -17,8 +16,14 @@ export class ListController {
    * @returns
    */
   @Post('column')
-  create(@Body() createListDto: CreateListDto) {
-    return this.listService.create(createListDto);
+  async create(@Body() createListDto: CreateListDto) {
+    const data = await this.listService.create(createListDto);
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: '컬럼 생성 완료',
+      data,
+    };
   }
 
   // @Get()
@@ -37,9 +42,9 @@ export class ListController {
    * @param updateListDto
    * @returns
    */
-  @Patch('column')
+  @Patch('column/:id')
   update(@Param('id') id: number, @Body() updateListDto: UpdateListDto) {
-    return this.listService.update(+id, updateListDto);
+    return this.listService.update(id, updateListDto);
   }
 
   /**
@@ -47,9 +52,9 @@ export class ListController {
    * @param id
    * @returns
    */
-  @Delete('column')
+  @Delete('column/:id')
   remove(@Param('id') id: number) {
-    return this.listService.remove(+id);
+    return this.listService.remove(id);
   }
 
   /**

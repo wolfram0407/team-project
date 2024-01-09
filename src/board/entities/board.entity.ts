@@ -1,44 +1,49 @@
-import { BoardMember } from "src/board_members/entities/board_members.entity"
-import { BoardGrade } from "src/common/types/boardGrade.type"
-import { Workspace } from "src/workspaces/entities/workspace.entity"
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { BoardMember } from 'src/board_members/entities/board_members.entity';
+import { BoardGrade } from 'src/common/types/boardGrade.type';
+import { Workspace } from 'src/workspaces/entities/workspace.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({
-  name: "boards",
+  name: 'boards',
 })
-
-export class Board
-{
+export class Board {
   @PrimaryGeneratedColumn()
-  boardId: number
+  boardId: number;
 
   @Column({ type: 'varchar', nullable: false })
-  title: string
+  title: string;
 
   @Column({ type: 'varchar', nullable: false })
-  image_path: string
+  image_path: string;
 
   @Column({ type: 'enum', enum: BoardGrade, default: BoardGrade.Public })
-  visibility: BoardGrade
-
+  visibility: BoardGrade;
 
   @CreateDateColumn()
-  created_at: Date
+  created_at: Date;
   @UpdateDateColumn()
-  updated_at: Date
+  updated_at: Date;
   @DeleteDateColumn()
-  deleted_at: Date
+  deleted_at: Date;
 
   @OneToMany(() => BoardMember, (boardMember) => boardMember.boards)
-  boardMember: BoardMember[]
-
+  boardMember: BoardMember[];
 
   @ManyToOne(() => Workspace, (workspace) => workspace.board, {
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'workspace_id', referencedColumnName: 'workspaceId' })
-  workspace: Workspace
+  workspace: Workspace;
   @Column()
-  workspaceId: number
-
+  workspaceId: number;
 }

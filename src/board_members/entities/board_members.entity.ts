@@ -1,6 +1,7 @@
 import { Activity } from 'src/activity/entities/activity.entity';
 import { Board } from 'src/board/entities/board.entity';
-import { BoardGrade } from 'src/common/types/boardGrade.type';
+import { CardMember } from 'src/card/entities/card-member.entity';
+// import { BoardGrade } from 'src/common/types/boardGrade.type';
 import { BoardMemberRole } from 'src/common/types/boardMember.type';
 import { User } from 'src/user/entities/user.entity';
 import {
@@ -9,7 +10,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
+  // ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -41,12 +42,14 @@ export class BoardMember {
   user_id: number;
 
   @ManyToOne(() => Board, (board) => board.boardMember, {
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'board_id' })
   boards: Board;
   @Column()
   board_id: number;
+
+  @OneToOne(() => CardMember, (cardMember) => cardMember.boardMember) cardMember: CardMember;
 
   @OneToMany((type) => Activity, (activity) => activity.boardMember)
   activity: Activity[];
