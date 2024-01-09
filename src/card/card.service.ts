@@ -108,14 +108,40 @@ export class CardService {
 
 
 
-  //트랜 잭션 걸어야 됨
   async remove(id: number) {
     const card = await this.cardRepository.findOne({where: {id}}) 
    
     if(!card){
-      return await this.cardRepository.restore(id)
+
+      const card = await this.cardRepository.findOne({where: {id},
+        withDeleted: true,
+      })
+
+      console.log(card)
+
+      await this.dataSource
+      .createQueryBuilder()
+      .update(Card)
+      .set({
+      position: ()=> "position + 1"
+      })
+      .where(`position >= ${card.position} and deleted_at is null `).execute()
+
+      
+      await this.cardRepository.restore(id)
+
+   
+      return card
+
     }
     
+    await this.dataSource
+    .createQueryBuilder()
+    .update(Card)
+    .set({
+    position: ()=> "position - 1"
+    })
+    .where(`position > ${card.position} `).execute()
     
     const deletedCard = await this.cardRepository.softDelete({id})
 
