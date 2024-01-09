@@ -29,6 +29,7 @@ export class UserController {
     return this.userService.createUser(email, password, name, signup_type);
   }
 
+
   @Public()
   @Post('login')
   async login(@Body() { email, password }: ReqLoginDto) {
