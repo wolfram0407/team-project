@@ -49,8 +49,6 @@ export class BoardMember {
   @Column()
   board_id: number;
 
-  @OneToOne(() => CardMember, (cardMember) => cardMember.boardMember) cardMember: CardMember;
-
   @OneToMany((type) => Activity, (activity) => activity.boardMember)
   activity: Activity[];
 
