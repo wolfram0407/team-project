@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { Card } from 'src/card/entities/card.entity';
 import {
   Column,
@@ -11,7 +11,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ListStatus } from '../type/list-status.type';
-import { Card } from 'src/card/entities/card.entity';
 import { Board } from 'src/board/entities/board.entity';
 
 @Entity('lists')
@@ -54,11 +53,12 @@ export class List {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @Column()
-  position: number;
+  // @Generated('increment')
+  @Column({ nullable: true })
+  position?: number;
 
   @OneToMany(() => Card, (card) => card.id)
-  cards: Card[];
+  card: Card[];
 
   @ManyToOne(() => Board, (board) => board.boardId, { onDelete: 'CASCADE' })
   boardId: Board;

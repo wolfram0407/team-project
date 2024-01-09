@@ -1,10 +1,11 @@
 import { Controller, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
 import { ListService } from './list.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MoveListDto } from './dto/move-list.dto';
 import { CreateListDto, UpdateListDto } from './dto/req-list.dto';
 
 @ApiTags('LIST')
+@ApiBearerAuth()
 @Controller(':boardId')
 export class ListController {
   constructor(private readonly listService: ListService) {}
