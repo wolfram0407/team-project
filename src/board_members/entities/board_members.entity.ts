@@ -32,7 +32,9 @@ export class BoardMember
   @Column()
   user_id: number
 
-  @ManyToOne(() => Board, (board) => board.boardMember)
+  @ManyToOne(() => Board, (board) => board.boardMember, {
+    onDelete: 'CASCADE'
+  })
   @JoinColumn({ name: 'board_id' })
   boards: Board
   @Column()

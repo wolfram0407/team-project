@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardMember } from './entities/board_members.entity';
-import { IsNull, Not, Repository } from 'typeorm';
+import { IsNull, Not, Repository, createQueryBuilder } from 'typeorm';
 import { BoardMemberRole } from 'src/common/types/boardMember.type';
 
 @Injectable()
@@ -16,6 +16,12 @@ export class BoardMembersService
 
   async create(userId: number, boardId: number, role: BoardMemberRole)
   {
+    const checkMember = await this.boardMembersRepository
+      .createQueryBuilder('bm')
+      .where('bm.user_id = :user_id', { user_id: userId })
+      .getMany()
+    if (checkMember)
+      throw new ConflictException('이미 등록된 유저')
 
     const member = this.boardMembersRepository.create({
       role,

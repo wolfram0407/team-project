@@ -1,5 +1,7 @@
-import { ApiProperty, PartialType } from "@nestjs/swagger"
-import { IsOptional, IsString, MaxLength, MinLength } from "class-validator"
+
+import { ApiProperty, ApiQuery, PartialType } from "@nestjs/swagger"
+import { IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, MinLength } from "class-validator"
+import { BoardMemberRole } from "src/common/types/boardMember.type"
 
 
 
@@ -18,7 +20,20 @@ export class CreateBoardDto
   @IsString()
   image_path: string
 
+  @ApiProperty({ example: 1 })
+  @IsNumber()
+  workSpaceId: number
+
 }
 
 
 export class UpdateBoardDto extends PartialType(CreateBoardDto) { }
+
+export class AddMemberDto
+{
+  @ApiProperty({ required: true, example: 'test3@test.com' })
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+}
