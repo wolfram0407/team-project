@@ -2,22 +2,24 @@ import { BoardMember } from 'src/board_members/entities/board_members.entity';
 import { UserGrade } from 'src/common/types/userGrade.type';
 import { WorkspaceMember } from 'src/workspace-members/entities/workspace-member.entity';
 import { Workspace } from 'src/workspaces/entities/workspace.entity';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  Index,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import
+  {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    Index,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+  } from 'typeorm';
 
 @Entity({
   name: 'users',
 })
-export class User {
+export class User
+{
   @PrimaryGeneratedColumn()
   userId: number;
 
@@ -51,6 +53,6 @@ export class User {
   })
   workspaceMembers: WorkspaceMember[];
 
-  @ManyToOne(() => BoardMember, (boardMember) => boardMember.user)
+  @OneToMany(() => BoardMember, (boardMember) => boardMember.user)
   boardMember: BoardMember[];
 }

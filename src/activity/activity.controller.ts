@@ -1,4 +1,5 @@
-import {
+import
+{
   Controller,
   Get,
   Post,
@@ -21,15 +22,17 @@ import { UpdateActivityDto } from './dto/update-activity.dto';
 
 @Controller('activity')
 
-export class ActivityController {
-  constructor(private readonly activityService: ActivityService) {}
-  
+export class ActivityController
+{
+  constructor(private readonly activityService: ActivityService) { }
+
   @Post(':cardId')
   async create(
     @Body() CreateActivityDto: CreateActivityDto,
     @Param('cardId') cardId: number,
     @Req() req: any,
-  ) {
+  )
+  {
     const { userId } = req.user;
 
     // const card = await this.cardService.findOne(cardId);
@@ -46,7 +49,8 @@ export class ActivityController {
   }
 
   @Get(':cardId')
-  async findAll(@Param('cardId') cardId: number) {
+  async findAll(@Param('cardId') cardId: number)
+  {
     const activity = await this.activityService.findAll(cardId);
 
     return {
@@ -61,16 +65,19 @@ export class ActivityController {
     @Param('activityId') activityId: number,
     @Body() updateActivityDto: UpdateActivityDto,
     @Req() req: any,
-  ) {
+  )
+  {
     const { userId } = req.user;
 
     const activity = await this.activityService.findOne(+activityId);
 
-    if (!activity) {
+    if (!activity)
+    {
       throw new NotFoundException('댓글이 존재하지 않습니다.');
     }
 
-    if (activity.userId !== userId) {
+    if (activity.userId !== userId)
+    {
       throw new ForbiddenException('권한이 없습니다.');
     }
 
@@ -83,16 +90,19 @@ export class ActivityController {
   }
 
   @Delete(':cardId/:activityId')
-  async delete(@Param('activityId') activityId: number, @Req() req: any) {
+  async delete(@Param('activityId') activityId: number, @Req() req: any)
+  {
     const { userId } = req.user;
 
     const activity = await this.activityService.findOne(+activityId);
 
-    if (!activity) {
+    if (!activity)
+    {
       throw new NotFoundException('댓글이 존재하지 않습니다.');
     }
 
-    if (activity.userId !== userId) {
+    if (activity.userId !== userId)
+    {
       throw new ForbiddenException('권한이 없습니다.');
     }
 
