@@ -2,24 +2,23 @@ import { BoardMember } from 'src/board_members/entities/board_members.entity';
 import { UserGrade } from 'src/common/types/userGrade.type';
 import { WorkspaceMember } from 'src/workspace-members/entities/workspace-member.entity';
 import { Workspace } from 'src/workspaces/entities/workspace.entity';
-import
-  {
-    Column,
-    CreateDateColumn,
-    DeleteDateColumn,
-    Entity,
-    Index,
-    ManyToOne,
-    OneToMany,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
-  } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({
   name: 'users',
 })
-export class User
-{
+export class User {
   @PrimaryGeneratedColumn()
   userId: number;
 
@@ -48,7 +47,7 @@ export class User
   @OneToMany(() => Workspace, (worksapce) => worksapce.user)
   workspaces: Workspace[];
 
-  @OneToMany(() => WorkspaceMember, (workspaceMember) => workspaceMember.user, {
+  @OneToOne(() => WorkspaceMember, (workspaceMember) => workspaceMember.user, {
     cascade: ['soft-remove'],
   })
   workspaceMembers: WorkspaceMember[];

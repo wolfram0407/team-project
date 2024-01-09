@@ -13,7 +13,7 @@ import { Roles } from 'src/common/decorator/role.decorator';
 @ApiTags('Workspace')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
-@Controller('workspaces')
+@Controller('w')
 export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
   /**
