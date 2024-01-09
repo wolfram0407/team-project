@@ -1,6 +1,7 @@
 import { IsString, IsInt } from 'class-validator';
+import { Board } from 'src/board/entities/board.entity';
+import { BoardMember } from 'src/board_members/entities/board_members.entity';
 import { Card } from 'src/card/entities/card.entity';
-import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -40,15 +41,15 @@ export class Activity {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  // @ManyToOne(() => User, (user) => user.activity)
-  // @JoinColumn({ name: 'userId' })
-  // user: User;
-  // @Column()
-  // user_id: number;
+  @ManyToOne(() => BoardMember, (boardMember) => boardMember.activity)
+  @JoinColumn({ name: 'boardMemberId' })
+  boardMember: BoardMember;
+  @Column()
+  boardMember_id: number;
 
-  // @ManyToOne(() => Card, (card) => card.activity)
-  // @JoinColumn({ name: 'cardId' })
-  // card: Card;
-  // @Column()
-  // card_id: number;
+  @ManyToOne(() => Card, (card) => card.activity)
+  @JoinColumn({ name: 'cardId' })
+  card: Card;
+  @Column()
+  card_id: number;
 }
