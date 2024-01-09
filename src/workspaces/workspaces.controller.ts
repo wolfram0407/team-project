@@ -23,7 +23,7 @@ export class WorkspaceController {
    */
   @Post()
   async create(@Body() createWorkspaceDto: ReqCreateWorkspaceDto, @UserInfo() user: User) {
-    await this.workspaceService.create(createWorkspaceDto, user);
+    await this.workspaceService.createNewWorkspace(createWorkspaceDto, user);
     return {
       success: 'true',
       message: '워크스페이스 생성 완료',
@@ -39,7 +39,9 @@ export class WorkspaceController {
     @UserInfo()
     user: User,
   ) {
-    const workspaces: Workspace[] = await this.workspaceService.findAll(user.userId);
+    const workspaces: Workspace[] = await this.workspaceService.findAllWorkspaceByUserId(
+      user.userId,
+    );
     return {
       success: 'true',
       message: '워크스페이스 조회 성공',
@@ -52,9 +54,11 @@ export class WorkspaceController {
    * @param user
    * @returns
    */
+  @UseGuards(WorkspaceMemberRolesGuard)
+  @Roles(...Object.values(WorkspaceMemberRole))
   @Get(':id')
   async findOne(@Param('id') id: number, @UserInfo() user: User) {
-    const workspace = await this.workspaceService.findOne(id, user.userId);
+    const workspace = await this.workspaceService.findOneByWorkspaceIdAndUserId(id, user.userId);
     return {
       success: 'true',
       message: '워크스페이스 조회 성공',
@@ -76,7 +80,7 @@ export class WorkspaceController {
     @Body() updateWorkspaceDto: ReqUpdateWorkspacesDto,
     @UserInfo() user: User,
   ) {
-    await this.workspaceService.update(id, updateWorkspaceDto, user.userId);
+    await this.workspaceService.updateWorkspaceTitleOrDesc(id, updateWorkspaceDto, user.userId);
     return {
       success: 'true',
       message: '워크스페이스 수정 성공',
@@ -92,7 +96,7 @@ export class WorkspaceController {
   @Roles(WorkspaceMemberRole.Admin)
   @Delete(':id')
   async remove(@Param('id') id: number, @UserInfo() user: User) {
-    await this.workspaceService.remove(id, user.userId);
+    await this.workspaceService.softRemoveWorkspace(id, user.userId);
     return {
       success: 'true',
       message: '워크스페이스 삭제 성공',

@@ -20,7 +20,7 @@ export class WorkspaceMemberRolesGuard extends AuthGuard('jwt') implements CanAc
   }
   async canActivate(context: ExecutionContext) {
     const { user } = context.switchToHttp().getRequest();
-    const workspaceId = context.switchToHttp().getRequest().params.id;
+    const workspaceId = context.switchToHttp().getRequest().params.workspaceId;
 
     const workspaceMember = await this.workspaceMemberService.findMemberByWorkspaceIdAndUserId(
       workspaceId,
