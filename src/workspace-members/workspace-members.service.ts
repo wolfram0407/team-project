@@ -15,7 +15,10 @@ export class WorkspaceMembersService {
     private readonly userService: UserService,
   ) {}
 
-  async create(createWorkspaceMemberDto: ReqCreateWorkspaceMemberDto, workspaceId: number) {
+  async createNewWorkspaceMember(
+    createWorkspaceMemberDto: ReqCreateWorkspaceMemberDto,
+    workspaceId: number,
+  ) {
     const { email, role } = createWorkspaceMemberDto;
 
     // 트렐로 서비스의 회원 여부 검증
@@ -40,7 +43,7 @@ export class WorkspaceMembersService {
     });
   }
 
-  async findAll(workspaceId: number) {
+  async findAllMemebersInWorkspace(workspaceId: number) {
     const members: WorkspaceMember[] = await this.workspaceMemberRepository
       .createQueryBuilder('wm')
       .leftJoinAndSelect('wm.user', 'u')
@@ -61,11 +64,82 @@ export class WorkspaceMembersService {
     return member;
   }
 
-  update(id: number, updateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto) {
-    return `This action updates a #${id} workspaceMember`;
+  async findMemberByEmail(workspaceId: number, email: string) {
+    const member: WorkspaceMember = await this.workspaceMemberRepository
+      .createQueryBuilder('wm')
+      .leftJoinAndSelect('wm.user', 'u')
+      .select([
+        'wm.workspaceId',
+        'wm.userId',
+        'wm.role',
+        'u.email',
+        'u.name',
+        'wm.createdAt',
+        'wm.updatedAt',
+      ])
+      .where('wm.workspaceId=:workspaceId', { workspaceId })
+      .andWhere('u.email= :email', { email })
+      .getOne();
+
+    if (!member) {
+      throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
+    }
+
+    return member;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} workspaceMember`;
+  async findMembersByName(workspaceId: number, name: string) {
+    const members: WorkspaceMember[] = await this.workspaceMemberRepository
+      .createQueryBuilder('wm')
+      .leftJoinAndSelect('wm.user', 'u')
+      .select([
+        'wm.workspaceId',
+        'wm.userId',
+        'wm.role',
+        'u.email',
+        'u.name',
+        'wm.createdAt',
+        'wm.updatedAt',
+      ])
+      .where('wm.workspaceId=:workspaceId', { workspaceId })
+      .andWhere('u.name LIKE :name', { name: `%${name}%` })
+      .getMany();
+
+    if (!members) {
+      throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
+    }
+
+    return members;
+  }
+
+  async updateWorkspaceMemberRole(
+    workspaceId: number,
+    ReqUpdateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto,
+    userId: number,
+  ) {
+    const { role } = ReqUpdateWorkspaceMemberDto;
+    const member = await this.findMemberByWorkspaceIdAndUserId(workspaceId, userId);
+    if (!member) {
+      throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
+    }
+
+    await this.workspaceMemberRepository.update(
+      {
+        workspaceId,
+        userId,
+      },
+      {
+        role,
+      },
+    );
+  }
+
+  async removeWorkspaceMember(workspaceId: number, userId: number) {
+    const member = await this.findMemberByWorkspaceIdAndUserId(workspaceId, userId);
+    if (!member) {
+      throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
+    }
+
+    await this.workspaceMemberRepository.softRemove(member);
   }
 }

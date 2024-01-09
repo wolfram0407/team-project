@@ -18,9 +18,12 @@ import { UpdateActivityDto } from './dto/update-activity.dto';
 
 @ApiBearerAuth()
 @ApiTags('Activity')
+
 @Controller('activity')
+
 export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
+  
   @Post(':cardId')
   async create(
     @Body() CreateActivityDto: CreateActivityDto,

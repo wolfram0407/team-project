@@ -29,7 +29,8 @@ export class UserController {
     return this.userService.createUser(email, password, name, signup_type);
   }
 
-  @Public() // jwt 없는 곳
+
+  @Public()
   @Post('login')
   async login(@Body() { email, password }: ReqLoginDto) {
     return this.userService.login(email, password);
