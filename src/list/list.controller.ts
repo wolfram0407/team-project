@@ -6,7 +6,7 @@ import { CreateListDto, UpdateListDto } from './dto/req-list.dto';
 
 @ApiTags('LIST')
 @ApiBearerAuth()
-@Controller(':boardId')
+@Controller('list/:boardId')
 export class ListController {
   constructor(private readonly listService: ListService) {}
 
