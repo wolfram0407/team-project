@@ -10,7 +10,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
+  // ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -48,6 +48,8 @@ export class BoardMember {
   boards: Board;
   @Column()
   board_id: number;
+
+  @OneToOne(() => CardMember, (cardMember) => cardMember.boardMember) cardMember: CardMember;
 
   @OneToMany((type) => Activity, (activity) => activity.boardMember)
   activity: Activity[];
