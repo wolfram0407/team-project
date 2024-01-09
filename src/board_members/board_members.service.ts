@@ -49,6 +49,31 @@ export class BoardMembersService
       .getMany();
   }
 
+  async findOneBoardMember(boardId: number, userId: number)
+  {
+    return await this.boardMembersRepository
+      .createQueryBuilder('member')
+      .where('member.deleted_at is null')
+      .andWhere('member.board_id = :boardId', { boardId: boardId })
+      .andWhere('member.user_id = :userId', { userId: userId })
+      .getOne();
+  }
+
+  async updateMember(boardId: number, userId: number, role: BoardMemberRole)
+  {
+    const boardMember = await this.findOneBoardMember(boardId, userId);
+    if (!boardMember)
+    {
+      throw new NotFoundException()
+    }
+    boardMember.role = role;
+    await this.boardMembersRepository.save(boardMember);
+
+    return {
+      message: 'Member updated successfully'
+    }
+
+  }
   // 보드 멤버 탈퇴
   async deleteMember(boardId: number, userId: number)
   {
