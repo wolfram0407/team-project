@@ -5,19 +5,15 @@ import { IsNull, Not, Repository, createQueryBuilder } from 'typeorm';
 import { BoardMemberRole } from 'src/common/types/boardMember.type';
 
 @Injectable()
-export class BoardMembersService {
+export class BoardMembersService
+{
   constructor(
     @InjectRepository(BoardMember)
     private boardMembersRepository: Repository<BoardMember>,
-  ) {}
+  ) { }
 
-  async create(userId: number, boardId: number, role: BoardMemberRole) {
-    const checkMember = await this.boardMembersRepository
-      .createQueryBuilder('bm')
-      .where('bm.user_id = :user_id', { user_id: userId })
-      .getMany();
-    // if (checkMember)
-    //   throw new ConflictException('이미 등록된 유저')
+  async create(userId: number, boardId: number, role: BoardMemberRole)
+  {
 
     const member = this.boardMembersRepository.create({
       role,
@@ -29,10 +25,23 @@ export class BoardMembersService {
     return boardMember;
   }
 
-  // 보드 멤버 생성
+  // 보드 멤버 생성 
+  async addMember(userId: number, boardId: number, role: BoardMemberRole)
+  {
+    const checkMember = await this.boardMembersRepository
+      .createQueryBuilder('bm')
+      .where('bm.user_id = :user_id', { user_id: userId })
+      .andWhere('bm.board_id = :board_id', { board_id: boardId })
+      .getOne()
 
+    if (checkMember)
+      throw new ConflictException('이미 등록된 유저')
+
+    return await this.create(userId, boardId, role)
+  }
   // 보드 아이디로 멤버 조회
-  async findBoardMembers(boardId: number) {
+  async findBoardMembers(boardId: number)
+  {
     return await this.boardMembersRepository
       .createQueryBuilder('member')
       .where('member.deleted_at is null')
@@ -41,14 +50,16 @@ export class BoardMembersService {
   }
 
   // 보드 멤버 탈퇴
-  async deleteMember(boardId: number, userId: number) {
+  async deleteMember(boardId: number, userId: number)
+  {
     const checkBoardMember = await this.boardMembersRepository.findOne({
       where: {
         user_id: userId,
         board_id: boardId,
       },
     });
-    if (!checkBoardMember) {
+    if (!checkBoardMember)
+    {
       throw new NotFoundException();
     }
 
@@ -56,7 +67,8 @@ export class BoardMembersService {
       boardMemberId: checkBoardMember.boardMemberId,
       user_id: userId,
     });
-    if (!deleteMember) {
+    if (!deleteMember)
+    {
       // 에러처리 필요!
       throw new NotFoundException('에러수정 필요!');
     }
