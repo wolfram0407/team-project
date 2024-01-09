@@ -11,7 +11,6 @@ import { WorkspaceModule } from './workspaces/workspaces.module';
 import { WorkspaceMembersModule } from './workspace-members/workspace-members.module';
 import { BoardModule } from './board/board.module';
 import { BoardMembersModule } from './board_members/board_members.module';
-
 import { ListModule } from './list/list.module';
 import { AlramModule } from './alram/alram.module';
 
@@ -22,16 +21,16 @@ import { AlramModule } from './alram/alram.module';
       validationSchema: configModuleValidationSchema,
     }),
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
-    CardModule,
     UserModule,
     AuthModule,
-    ActivityModule,
     WorkspaceModule,
     WorkspaceMembersModule,
     BoardModule,
     BoardMembersModule,
     ListModule,
     AlramModule,
+    ActivityModule,
+    CardModule,
   ],
   controllers: [],
   providers: [],

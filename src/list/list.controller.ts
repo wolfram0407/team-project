@@ -7,8 +7,9 @@ import { CreateListDto, UpdateListDto } from './dto/req-list.dto';
 @ApiTags('LIST')
 @ApiBearerAuth()
 @Controller('list/:boardId')
-export class ListController {
-  constructor(private readonly listService: ListService) {}
+export class ListController
+{
+  constructor(private readonly listService: ListService) { }
 
   /**
    * 컬럼 생성
@@ -16,7 +17,8 @@ export class ListController {
    * @returns
    */
   @Post('column')
-  async create(@Body() createListDto: CreateListDto) {
+  async create(@Body() createListDto: CreateListDto)
+  {
     const data = await this.listService.create(createListDto);
 
     return {
@@ -43,7 +45,8 @@ export class ListController {
    * @returns
    */
   @Patch('column/:id')
-  update(@Param('id') id: number, @Body() updateListDto: UpdateListDto) {
+  update(@Param('id') id: number, @Body() updateListDto: UpdateListDto)
+  {
     return this.listService.update(id, updateListDto);
   }
 
@@ -53,7 +56,8 @@ export class ListController {
    * @returns
    */
   @Delete('column/:id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: number)
+  {
     return this.listService.remove(id);
   }
 
@@ -69,7 +73,8 @@ export class ListController {
     @Param('id') id: number,
     @Param('boardId') boardId: number,
     @Body() moveListDto: MoveListDto,
-  ) {
+  )
+  {
     return this.listService.move(id, boardId, moveListDto);
   }
 }
