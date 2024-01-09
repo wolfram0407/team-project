@@ -1,5 +1,6 @@
 import { Activity } from 'src/activity/entities/activity.entity';
 import { Board } from 'src/board/entities/board.entity';
+import { CardMember } from 'src/card/entities/card-member.entity';
 import { BoardGrade } from 'src/common/types/boardGrade.type';
 import { BoardMemberRole } from 'src/common/types/boardMember.type';
 import { User } from 'src/user/entities/user.entity';
@@ -41,7 +42,7 @@ export class BoardMember {
   user_id: number;
 
   @ManyToOne(() => Board, (board) => board.boardMember, {
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'board_id' })
   boards: Board;
@@ -50,4 +51,8 @@ export class BoardMember {
 
   @OneToMany((type) => Activity, (activity) => activity.boardMember)
   activity: Activity[];
+
+  @OneToOne((type) => CardMember, (cardMember) => cardMember.boardMember, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'card_member_id' })
+  cardMember: CardMember;
 }
