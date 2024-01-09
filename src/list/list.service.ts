@@ -1,37 +1,58 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Connection, QueryRunner } from 'typeorm';
-import { CreateListDto } from './dto/create-list.dto';
-import { UpdateListDto } from './dto/update-list.dto';
 import { MoveListDto } from './dto/move-list.dto';
 import { List } from './entities/list.entity';
+import { CreateListDto, UpdateListDto } from './dto/req-list.dto';
 
 @Injectable()
 export class ListService {
   constructor(
     @InjectRepository(List)
-    private listRepository: Repository<List>,
+    private readonly listRepository: Repository<List>,
     private connection: Connection,
   ) {}
 
-  create(createListDto: CreateListDto) {
-    return 'This action adds a new list';
+  async create(createListDto: CreateListDto) {
+    const { ...restOfList } = createListDto;
+
+    const list = await this.listRepository.save({
+      ...restOfList,
+    });
+
+    return list;
   }
 
-  findAll() {
-    return `This action returns all list`;
+  // findAll() {
+  //   return `This action returns all list`;
+  // }
+
+  // findOne(id: number) {
+  //   return `This action returns a #${id} list`;
+  // }
+
+  async update(id: number, updateListDto: UpdateListDto) {
+    const listToUpdate = await this.listRepository.findOne({ where: { listId: id } });
+    if (!listToUpdate) {
+      throw new NotFoundException(`List not found with id ${id}`);
+    }
+
+    const updatedList = await this.listRepository.save({
+      ...listToUpdate,
+      ...updateListDto,
+    });
+
+    return updatedList;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} list`;
-  }
+  async remove(id: number) {
+    const listToRemove = await this.listRepository.findOne({ where: { listId: id } }); // findOne 으로 삭제할 컬럼 찾기
+    if (!listToRemove) {
+      throw new NotFoundException(`List not found with id ${id}`);
+    }
 
-  update(id: number, updateListDto: UpdateListDto) {
-    return `This action updates a #${id} list`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} list`;
+    await this.listRepository.remove(listToRemove); // remove 메소드 사용하여 찾은 해당 컬럼 삭제
+    return { message: `List with id ${id} removed successfully` };
   }
 
   async move(listId: number, boardId: number, moveListDto: MoveListDto) {
@@ -48,9 +69,9 @@ export class ListService {
       const currentPosition = list.position;
       await this.listRepository.update(listId, { position: moveListDto.newPosition });
 
-      // Update positions of other lists
+      // 다른 목록의 위치 업데이트
       if (currentPosition < moveListDto.newPosition) {
-        // List moves down
+        // 목록이 아래로 이동
         await this.updatePositionsDecrease(
           currentPosition,
           moveListDto.newPosition,
@@ -58,7 +79,7 @@ export class ListService {
           queryRunner,
         );
       } else {
-        // List moves up
+        // 목록이 위로 이동
         await this.updatePositionsIncrease(
           currentPosition,
           moveListDto.newPosition,
@@ -83,7 +104,14 @@ export class ListService {
     boardId: number,
     queryRunner: QueryRunner,
   ) {
-    // Logic to decrease positions of other lists
+    for (let pos = startPos + 1; pos <= endPos; pos++) {
+      await queryRunner.manager.increment(
+        List,
+        { boardId: boardId, position: pos },
+        'position',
+        -1,
+      );
+    }
   }
 
   private async updatePositionsIncrease(
@@ -92,6 +120,8 @@ export class ListService {
     boardId: number,
     queryRunner: QueryRunner,
   ) {
-    // Logic to increase positions of other lists
+    for (let pos = endPos; pos < startPos; pos++) {
+      await queryRunner.manager.increment(List, { boardId: boardId, position: pos }, 'position', 1);
+    }
   }
 }

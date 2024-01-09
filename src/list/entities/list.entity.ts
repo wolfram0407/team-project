@@ -5,12 +5,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
-  //   ManyToOne,
-  //   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ListStatus } from '../type/list-status.type';
+import { Card } from 'src/card/entities/card.entity';
+import { Board } from 'src/board/entities/board.entity';
 
 @Entity('lists')
 export class List {
@@ -26,6 +28,23 @@ export class List {
   @Column()
   title: string;
 
+  /**
+   * 컬럼 생성
+   * @example "내용 example"
+   */
+  @IsNotEmpty({ message: '내용을 입력해주세요' })
+  @IsString()
+  @Column()
+  content: string;
+
+  /**
+   * 상태 표시
+   * @example "상태 example"
+   */
+  @IsEnum(ListStatus)
+  @Column({ type: 'enum', enum: ListStatus, default: ListStatus.Backlog })
+  status: ListStatus;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -38,9 +57,9 @@ export class List {
   @Column()
   position: number;
 
-  @OneToMany((type) => Card, (card) => card.list)
-  card: Card[];
+  @OneToMany(() => Card, (card) => card.id)
+  cards: Card[];
 
-  //   @ManyToOne((type) => Board, boardId => board.list, {onDelete: 'CASCADE'})
-  //   boardId: Board;
+  @ManyToOne(() => Board, (board) => board.boardId, { onDelete: 'CASCADE' })
+  boardId: Board;
 }
