@@ -1,7 +1,9 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Board } from 'src/board/entities/board.entity';
 import { User } from 'src/user/entities/user.entity';
 import { WorkspaceMember } from 'src/workspace-members/entities/workspace-member.entity';
-import {
+import
+{
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -14,7 +16,8 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'workspaces' })
-export class Workspace {
+export class Workspace
+{
   @PrimaryGeneratedColumn()
   workspaceId: number;
 
@@ -58,4 +61,8 @@ export class Workspace {
     cascade: ['soft-remove'],
   })
   workspaceMembers: WorkspaceMember[];
+
+  @OneToMany(() => Board, (board) => board.workspace)
+  board: Board[]
+
 }

@@ -41,13 +41,13 @@ export class Activity {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @ManyToOne(() => BoardMember, (boardMember) => boardMember.activity)
+  @ManyToOne(() => BoardMember, (boardMember) => boardMember.activity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'boardMemberId' })
   boardMember: BoardMember;
   @Column()
   boardMember_id: number;
 
-  @ManyToOne(() => Card, (card) => card.activity)
+  @ManyToOne(() => Card, (card) => card.activity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'cardId' })
   card: Card;
   @Column()
