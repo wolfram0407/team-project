@@ -34,7 +34,7 @@ export class CardService {
     })
   }
 
-  async addBoardMember(cardId: number, boardMemberId: number){
+  async addCardMember(cardId: number, boardMemberId: number){
    
     const boardMember = await this.boardMemberRepsitory.findOne({where: {boardMemberId}})
         

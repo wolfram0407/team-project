@@ -38,14 +38,14 @@ export class CardController {
    */
   @ApiBearerAuth()
   @Post("/card/:cardId/:boardMemberId")
-  async addBoardMember(@Param("cardId") cardId:number,
+  async addCardMember(@Param("cardId") cardId:number,
     @Param("boardMemberId") boardMemberId:number
   ){
-    const data = await this.cardService.addBoardMember(cardId, boardMemberId);    
+    const data = await this.cardService.addCardMember(cardId, boardMemberId);    
 
     return {
       statusCode: HttpStatus.CREATED,
-      message: '보드 멤버 추가',
+      message: '카드 멤버 추가',
       data,
     }
   }
