@@ -3,7 +3,8 @@ import { Card } from '../../card/entities/card.entity';
 import { BoardMember } from 'src/board_members/entities/board_members.entity';
 
 @Entity('card_members')
-export class CardMember {
+export class CardMember
+{
   @PrimaryGeneratedColumn({ unsigned: true })
   id: number;
 
