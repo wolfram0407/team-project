@@ -4,32 +4,33 @@ import { Repository, Connection, QueryRunner } from 'typeorm';
 import { MoveListDto } from './dto/move-list.dto';
 import { List } from './entities/list.entity';
 import { CreateListDto, UpdateListDto } from './dto/req-list.dto';
+import { Board } from 'src/board/entities/board.entity';
 
 @Injectable()
 export class ListService {
   constructor(
     @InjectRepository(List)
     private readonly listRepository: Repository<List>,
+    @InjectRepository(Board)
+    private readonly boardRepository: Repository<Board>,
     private connection: Connection,
   ) {}
 
-  async create(createListDto: CreateListDto) {
-    const { ...restOfList } = createListDto;
+  async create(boardId: number, createListDto: CreateListDto) {
+    // Board의 존재 여부를 확인
+    const board = await this.boardRepository.findOne({ where: { boardId } });
+    if (!board) {
+      throw new NotFoundException(`Board with id ${boardId} not found`);
+    }
 
+    // Board가 존재하면 List 생성 진행
     const list = await this.listRepository.save({
-      ...restOfList,
+      ...createListDto,
+      board, // Board.entity를 직접 할당
     });
 
     return list;
   }
-
-  // findAll() {
-  //   return `This action returns all list`;
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} list`;
-  // }
 
   async update(id: number, updateListDto: UpdateListDto) {
     const listToUpdate = await this.listRepository.findOne({ where: { listId: id } });

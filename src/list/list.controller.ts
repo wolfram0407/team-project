@@ -17,7 +17,11 @@ export class ListController {
    */
   @Post('column')
   async create(@Param('boardId') boardId: string, @Body() createListDto: CreateListDto) {
-    const data = await this.listService.create({ ...createListDto /*boardId: Number(boardId)*/ });
+    // boardId를 숫자로 변환합니다.
+    const numericBoardId = Number(boardId);
+
+    // 변환된 boardId와 createListDto를 create 메서드에 전달합니다.
+    const data = await this.listService.create(numericBoardId, createListDto);
 
     return {
       statusCode: HttpStatus.CREATED,
