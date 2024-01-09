@@ -1,5 +1,5 @@
 import { Board } from "src/board/entities/board.entity"
-import { BoardGrade } from "src/common/types/boardGrade.type"
+import { CardMember } from "src/card/entities/card-member.entity"
 import { BoardMemberRole } from "src/common/types/boardMember.type"
 import { User } from "src/user/entities/user.entity"
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
@@ -39,4 +39,8 @@ export class BoardMember
   boards: Board
   @Column()
   board_id: number
+
+  @OneToOne(()=> CardMember, (cardMember)=> cardMember.boardMember)
+  cardMember: CardMember
+
 }

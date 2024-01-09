@@ -15,16 +15,17 @@ import
 import { ActivityService } from './activity.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 
-@UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiTags('Activity')
+
 @Controller('activity')
+
 export class ActivityController
 {
   constructor(private readonly activityService: ActivityService) { }
+
   @Post(':cardId')
   async create(
     @Body() CreateActivityDto: CreateActivityDto,
@@ -41,7 +42,22 @@ export class ActivityController
     // }
 
     await this.activityService.create(CreateActivityDto, cardId, userId);
-    return { message: '댓글이 생성되었습니다.' };
+    return {
+      success: 'true',
+      message: '댓글 생성 완료',
+    };
+  }
+
+  @Get(':cardId')
+  async findAll(@Param('cardId') cardId: number)
+  {
+    const activity = await this.activityService.findAll(cardId);
+
+    return {
+      success: 'true',
+      message: '댓글 조회 완료',
+      data: activity,
+    };
   }
 
   @Patch(':cardId/:activityId')
@@ -67,7 +83,10 @@ export class ActivityController
 
     await this.activityService.update(+activityId, updateActivityDto);
 
-    return { message: '댓글이 수정되었습니다.' };
+    return {
+      success: 'true',
+      message: '댓글 수정 완료',
+    };
   }
 
   @Delete(':cardId/:activityId')
@@ -88,7 +107,9 @@ export class ActivityController
     }
 
     await this.activityService.delete(+activityId);
-
-    return { message: '댓글이 삭제되었습니다.' };
+    return {
+      success: 'true',
+      message: '댓글 삭제 완료',
+    };
   }
 }

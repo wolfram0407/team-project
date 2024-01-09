@@ -28,6 +28,10 @@ export class ActivityService {
     return await this.activityRepository.findOne({ where: { activityId } });
   }
 
+  async findAll(cardId: number) {
+    return await this.activityRepository.find({ where: { cardId } });
+  }
+
   async update(activityId: number, updateActivityDto: UpdateActivityDto) {
     await this.activityRepository.update({ activityId }, updateActivityDto);
   }
