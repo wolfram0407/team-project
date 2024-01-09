@@ -18,7 +18,6 @@ import { BoardMemberRole } from 'src/common/types/boardMember.type';
 import { BoardMembersService } from 'src/board_members/board_members.service';
 import { BoardGrade } from 'src/common/types/boardGrade.type';
 import { WorkspaceMembersService } from 'src/workspace-members/workspace-members.service';
-import e from 'express';
 
 @Injectable()
 export class BoardService {
@@ -173,7 +172,7 @@ export class BoardService {
       throw new BadRequestException('워크스페이스 먼저 등록이 되어야합니다');
     }
     //board members add
-    const addBoardMember = await this.boardMembersService.create(f_user.userId, boardId, role);
+    const addBoardMember = await this.boardMembersService.addMember(f_user.userId, boardId, role);
 
     return addBoardMember;
   }

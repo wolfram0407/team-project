@@ -7,12 +7,11 @@ import {
   IsString,
   MaxLength,
   MinLength,
+  isNumber,
 } from 'class-validator';
 import { BoardMemberRole } from 'src/common/types/boardMember.type';
 
 export class CreateBoardDto {
-  board_id: number;
-
   @ApiProperty({ required: true, example: 'test보드' })
   @IsString()
   @MaxLength(30)
@@ -36,3 +35,11 @@ export class AddMemberDto {
   @IsNotEmpty()
   email: string;
 }
+
+export class UpdateMemberDto {
+  @ApiProperty({ required: true, example: 3 })
+  @IsNumber()
+  userId: number;
+}
+
+export class DeleteMemberDto extends PartialType(UpdateMemberDto) {}

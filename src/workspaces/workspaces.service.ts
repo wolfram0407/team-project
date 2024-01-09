@@ -38,7 +38,8 @@ export class WorkspaceService {
     const workspaces: Workspace[] = await this.workspaceRepository
       .createQueryBuilder('w')
       .leftJoinAndSelect('w.workspaceMembers', 'wm')
-      .select(['w.workspaceId', 'w.title', 'w.description'])
+      .leftJoinAndSelect('w.board', 'b')
+      .select(['w.workspaceId', 'w.title', 'w.description', 'b.boardId', 'b.title', 'b.image_path'])
       .where('wm.userId=:userId', { userId })
       .getMany();
 
@@ -49,7 +50,16 @@ export class WorkspaceService {
     const workspace: Workspace = await this.workspaceRepository
       .createQueryBuilder('w')
       .leftJoinAndSelect('w.workspaceMembers', 'wm')
-      .select(['w.workspaceId', 'w.title', 'w.description', 'wm.userId'])
+      .leftJoinAndSelect('w.board', 'b')
+      .select([
+        'w.workspaceId',
+        'w.title',
+        'w.description',
+        'wm.userId',
+        'b.boardId',
+        'b.title',
+        'b.image_path',
+      ])
       .where('wm.workspaceId=:workspaceId', { workspaceId })
       .andWhere('wm.userId=:userId', { userId })
       .getOne();
