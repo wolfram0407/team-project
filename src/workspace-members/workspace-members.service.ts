@@ -18,7 +18,7 @@ export class WorkspaceMembersService {
   async createNewWorkspaceMember(
     createWorkspaceMemberDto: ReqCreateWorkspaceMemberDto,
     workspaceId: number,
-  ) {
+  ): Promise<void> {
     const { email, role } = createWorkspaceMemberDto;
 
     // 트렐로 서비스의 회원 여부 검증
@@ -43,7 +43,7 @@ export class WorkspaceMembersService {
     });
   }
 
-  async findAllMemebersInWorkspace(workspaceId: number) {
+  async findAllMemebersInWorkspace(workspaceId: number): Promise<WorkspaceMember[]> {
     const members: WorkspaceMember[] = await this.workspaceMemberRepository
       .createQueryBuilder('wm')
       .leftJoinAndSelect('wm.user', 'u')
@@ -53,7 +53,10 @@ export class WorkspaceMembersService {
     return members;
   }
 
-  async findMemberByWorkspaceIdAndUserId(workspaceId: number, userId: number) {
+  async findMemberByWorkspaceIdAndUserId(
+    workspaceId: number,
+    userId: number,
+  ): Promise<WorkspaceMember> {
     const member: WorkspaceMember = await this.workspaceMemberRepository.findOne({
       where: {
         workspaceId,
@@ -64,7 +67,7 @@ export class WorkspaceMembersService {
     return member;
   }
 
-  async findMemberByEmail(workspaceId: number, email: string) {
+  async findMemberByEmail(workspaceId: number, email: string): Promise<WorkspaceMember> {
     const member: WorkspaceMember = await this.workspaceMemberRepository
       .createQueryBuilder('wm')
       .leftJoinAndSelect('wm.user', 'u')
@@ -88,7 +91,7 @@ export class WorkspaceMembersService {
     return member;
   }
 
-  async findMembersByName(workspaceId: number, name: string) {
+  async findMembersByName(workspaceId: number, name: string): Promise<WorkspaceMember[]> {
     const members: WorkspaceMember[] = await this.workspaceMemberRepository
       .createQueryBuilder('wm')
       .leftJoinAndSelect('wm.user', 'u')
@@ -116,9 +119,12 @@ export class WorkspaceMembersService {
     workspaceId: number,
     ReqUpdateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto,
     userId: number,
-  ) {
+  ): Promise<void> {
     const { role } = ReqUpdateWorkspaceMemberDto;
-    const member = await this.findMemberByWorkspaceIdAndUserId(workspaceId, userId);
+    const member: WorkspaceMember = await this.findMemberByWorkspaceIdAndUserId(
+      workspaceId,
+      userId,
+    );
     if (!member) {
       throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
     }
@@ -134,8 +140,11 @@ export class WorkspaceMembersService {
     );
   }
 
-  async removeWorkspaceMember(workspaceId: number, userId: number) {
-    const member = await this.findMemberByWorkspaceIdAndUserId(workspaceId, userId);
+  async removeWorkspaceMember(workspaceId: number, userId: number): Promise<void> {
+    const member: WorkspaceMember = await this.findMemberByWorkspaceIdAndUserId(
+      workspaceId,
+      userId,
+    );
     if (!member) {
       throw new NotFoundException('해당하는 멤버를 찾을 수 없습니다.');
     }
