@@ -13,6 +13,7 @@ import { BoardModule } from './board/board.module';
 import { BoardMembersModule } from './board_members/board_members.module';
 
 import { ListModule } from './list/list.module';
+import { AlramModule } from './alram/alram.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ListModule } from './list/list.module';
     BoardModule,
     BoardMembersModule,
     ListModule,
+    AlramModule,
   ],
   controllers: [],
   providers: [],
