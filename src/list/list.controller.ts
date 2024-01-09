@@ -8,8 +8,9 @@ import { MoveListDto } from './dto/move-list.dto';
 
 @ApiTags('LIST')
 @Controller(':boardId')
-export class ListController {
-  constructor(private readonly listService: ListService) {}
+export class ListController
+{
+  constructor(private readonly listService: ListService) { }
 
   /**
    * 컬럼 생성
@@ -17,7 +18,8 @@ export class ListController {
    * @returns
    */
   @Post('column')
-  create(@Body() createListDto: CreateListDto) {
+  create(@Body() createListDto: CreateListDto)
+  {
     return this.listService.create(createListDto);
   }
 
@@ -38,7 +40,8 @@ export class ListController {
    * @returns
    */
   @Patch('column')
-  update(@Param('id') id: number, @Body() updateListDto: UpdateListDto) {
+  update(@Param('id') id: number, @Body() updateListDto: UpdateListDto)
+  {
     return this.listService.update(+id, updateListDto);
   }
 
@@ -48,7 +51,8 @@ export class ListController {
    * @returns
    */
   @Delete('column')
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: number)
+  {
     return this.listService.remove(+id);
   }
 
@@ -64,7 +68,8 @@ export class ListController {
     @Param('id') id: number,
     @Param('boardId') boardId: number,
     @Body() moveListDto: MoveListDto,
-  ) {
+  )
+  {
     return this.listService.move(id, boardId, moveListDto);
   }
 }

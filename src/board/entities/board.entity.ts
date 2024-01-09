@@ -1,7 +1,7 @@
 import { BoardMember } from "src/board_members/entities/board_members.entity"
 import { BoardGrade } from "src/common/types/boardGrade.type"
 import { Workspace } from "src/workspaces/entities/workspace.entity"
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Generated, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 @Entity({
   name: "boards",
@@ -31,7 +31,6 @@ export class Board
 
   @OneToMany(() => BoardMember, (boardMember) => boardMember.boards)
   boardMember: BoardMember[]
-
 
   @ManyToOne(() => Workspace, (workspace) => workspace.board, {
     onDelete: 'CASCADE'

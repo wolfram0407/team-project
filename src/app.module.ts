@@ -21,17 +21,19 @@ import { ListModule } from './list/list.module';
       validationSchema: configModuleValidationSchema,
     }),
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
-    CardModule,
+
     UserModule,
     AuthModule,
-    ActivityModule,
+
     WorkspaceModule,
     WorkspaceMembersModule,
     BoardModule,
     BoardMembersModule,
     ListModule,
+    ActivityModule,
+    CardModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

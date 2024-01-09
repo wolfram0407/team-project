@@ -16,12 +16,6 @@ export class BoardMembersService
 
   async create(userId: number, boardId: number, role: BoardMemberRole)
   {
-    const checkMember = await this.boardMembersRepository
-      .createQueryBuilder('bm')
-      .where('bm.user_id = :user_id', { user_id: userId })
-      .getMany()
-    if (checkMember)
-      throw new ConflictException('이미 등록된 유저')
 
     const member = this.boardMembersRepository.create({
       role,
@@ -33,19 +27,53 @@ export class BoardMembersService
     return boardMember
   }
 
-  // 보드 멤버 생성
+  // 보드 멤버 생성 
+  async addMember(userId: number, boardId: number, role: BoardMemberRole)
+  {
+    const checkMember = await this.boardMembersRepository
+      .createQueryBuilder('bm')
+      .where('bm.user_id = :user_id', { user_id: userId })
+      .andWhere('bm.board_id = :board_id', { board_id: boardId })
+      .getOne()
 
+    if (checkMember)
+      throw new ConflictException('이미 등록된 유저')
+
+    return await this.create(userId, boardId, role)
+  }
   // 보드 아이디로 멤버 조회
   async findBoardMembers(boardId: number)
   {
-    return await this.boardMembersRepository
+    const temp = await this.boardMembersRepository
       .createQueryBuilder('member')
       .where('member.deleted_at is null')
       .andWhere('member.board_id = :boardId', { boardId: boardId })
       .getMany()
 
+    return temp
+
+  }
+  // 보드 아이디로 멤버 조회
+  async findOneBoardMember(boardId: number, userId: number)
+  {
+    const temp = await this.boardMembersRepository
+      .createQueryBuilder('member')
+      .where('member.deleted_at is null')
+      .andWhere('member.board_id = :boardId', { boardId: boardId })
+      .andWhere('member.user_id = :userId', { userId: userId })
+      .getOne()
+
+    return temp
+
   }
 
+  //보드멤버 수정
+  async updateMember(boardId: number, userId: number, role: BoardMemberRole)
+  {
+    const member = await this.findBoardMembers(boardId)
+    member.find((member) => member.user_id === userId).role = role
+    await this.boardMembersRepository.save(member)
+  }
 
   // 보드 멤버 탈퇴
   async deleteMember(boardId: number, userId: number)

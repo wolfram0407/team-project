@@ -8,16 +8,17 @@ import { compareSync, hashSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
-export class UserService {
+export class UserService
+{
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private readonly configService: ConfigService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
-  async createUser(email: string, password: string, name: string, signup_type: string) {
-    console.log('create', email, password, name, signup_type);
+  async createUser(email: string, password: string, name: string, signup_type: string)
+  {
     const existUser = await this.findUserByEmail(email);
     if (existUser) throw new ConflictException('User already exists');
     const hashRound = this.configService.get<number>('PASSWORD_HASH_ROUNDS');
@@ -30,7 +31,8 @@ export class UserService {
     });
   }
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string)
+  {
     const user = await this.findUserByEmailAndPassword(email);
     if (!user) throw new UnauthorizedException('이메일을 확인해주세요.');
 
@@ -43,27 +45,32 @@ export class UserService {
     };
   }
 
-  async updateUserInfo(userId: number, name: string) {
+  async updateUserInfo(userId: number, name: string)
+  {
     const updated = await this.userRepository.update({ userId }, { name });
 
     return updated;
   }
 
-  async deleteUser(userId: number) {
+  async deleteUser(userId: number)
+  {
     return await this.userRepository.softDelete({ userId });
   }
 
-  async findUserById(userId: number) {
+  async findUserById(userId: number)
+  {
     return await this.userRepository.findOneBy({ userId });
   }
 
-  async findUserByEmailAndPassword(email: string) {
+  async findUserByEmailAndPassword(email: string)
+  {
     return await this.userRepository.findOne({
       select: ['userId', 'email', 'password', 'name', 'grade', 'signup_type'],
       where: [{ email }],
     });
   }
-  async findUserByEmail(email: string) {
+  async findUserByEmail(email: string)
+  {
     return await this.userRepository.findOneBy({ email });
   }
 }
