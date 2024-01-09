@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -38,7 +39,7 @@ export class List {
 
   /**
    * 상태 표시
-   * @example "상태 example"
+   * @example "Backlog"
    */
   @IsEnum(ListStatus)
   @Column({ type: 'enum', enum: ListStatus, default: ListStatus.Backlog })
@@ -61,5 +62,6 @@ export class List {
   card: Card[];
 
   @ManyToOne(() => Board, (board) => board.boardId, { onDelete: 'CASCADE' })
-  boardId: Board;
+  @JoinColumn({ name: 'board_id' })
+  boardId: number;
 }

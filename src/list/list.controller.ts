@@ -16,8 +16,8 @@ export class ListController {
    * @returns
    */
   @Post('column')
-  async create(@Body() createListDto: CreateListDto) {
-    const data = await this.listService.create(createListDto);
+  async create(@Param('boardId') boardId: string, @Body() createListDto: CreateListDto) {
+    const data = await this.listService.create({ ...createListDto /*boardId: Number(boardId)*/ });
 
     return {
       statusCode: HttpStatus.CREATED,
