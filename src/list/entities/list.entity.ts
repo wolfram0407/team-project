@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { Card } from 'src/card/entities/card.entity';
 import {
   Column,
@@ -11,7 +11,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ListStatus } from '../type/list-status.type';
 import { Board } from 'src/board/entities/board.entity';
 
 @Entity('lists')
@@ -28,22 +27,22 @@ export class List {
   @Column()
   title: string;
 
-  /**
-   * 컬럼 생성
-   * @example "내용 example"
-   */
-  @IsNotEmpty({ message: '내용을 입력해주세요' })
-  @IsString()
-  @Column()
-  content: string;
+  // /**
+  //  * 컬럼 생성
+  //  * @example "내용 example"
+  //  */
+  // @IsNotEmpty({ message: '내용을 입력해주세요' })
+  // @IsString()
+  // @Column()
+  // content: string;
 
-  /**
-   * 상태 표시
-   * @example "Backlog"
-   */
-  @IsEnum(ListStatus)
-  @Column({ type: 'enum', enum: ListStatus, default: ListStatus.Backlog })
-  status: ListStatus;
+  // /**
+  //  * 상태 표시
+  //  * @example "Backlog"
+  //  */
+  // @IsEnum(ListStatus)
+  // @Column({ type: 'enum', enum: ListStatus, default: ListStatus.Backlog })
+  // status: ListStatus;
 
   @CreateDateColumn()
   createdAt: Date;

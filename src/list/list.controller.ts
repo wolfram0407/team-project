@@ -4,7 +4,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MoveListDto } from './dto/move-list.dto';
 import { CreateListDto, UpdateListDto } from './dto/req-list.dto';
 
-@ApiTags('LIST')
+@ApiTags('List')
 @ApiBearerAuth()
 @Controller('list/:boardId')
 export class ListController {

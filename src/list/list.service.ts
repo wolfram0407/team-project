@@ -23,14 +23,24 @@ export class ListService {
       throw new NotFoundException('해당 보드는 존재하지 않습니다');
     }
 
-    // Board가 존재하면 List 생성 진행
-    const list = await this.listRepository.save({
-      ...createListDto,
-      boardId, // Board.entity를 직접 할당
-      position: 1,
+    // 해당 boardId를 가진 컬럼들 중 가장 높은 position 값을 찾음
+    const highestPosition = await this.listRepository.findOne({
+      where: { boardId: board.boardId },
+      order: { position: 'DESC' },
     });
 
-    return list;
+    // 새로운 컬럼의 position 값 설정
+    const newPosition = highestPosition ? highestPosition.position + 1 : 1;
+
+    // Board가 존재하면 새 List 컬럼을 생성하고 저장
+    const list = this.listRepository.create({
+      ...createListDto,
+      boardId: board.boardId, // Board.entity를 직접 할당
+      // board, // board 객체를 직접 할당
+      position: newPosition,
+    });
+
+    return await this.listRepository.save(list);
   }
 
   async update(id: number, updateListDto: UpdateListDto) {
@@ -58,7 +68,7 @@ export class ListService {
       throw new NotFoundException('해당 리스트는 존재하지 않습니다');
     }
 
-    await this.listRepository.remove(listToRemove); // remove 메소드 사용하여 찾은 해당 컬럼 삭제
+    await this.listRepository.softRemove(listToRemove); // remove 메소드 사용하여 찾은 해당 컬럼 삭제
     return { message: '컬럼 제거 성공' };
   }
 

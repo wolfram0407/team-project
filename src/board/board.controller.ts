@@ -55,18 +55,6 @@ export class BoardController {
     return this.boardService.findAll(userId);
   }
 
-  // 로그인된 유저 및 선택된 보드를 조회
-  @ApiBearerAuth()
-  @Get(':boardId/:boardTitle')
-  findOne(
-    @Param('boardId') boardId: string,
-    @Param('boardTitle') bt: string,
-    @UserInfo() { userId }: User,
-  ) {
-    console.log(boardId, bt);
-
-    return this.boardService.findOne(bt, userId);
-  }
   // 검색
   @ApiBearerAuth()
   @Get('/find/:search')
