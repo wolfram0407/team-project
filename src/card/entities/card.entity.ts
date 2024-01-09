@@ -1,5 +1,4 @@
 import { IsDateString, IsNotEmpty } from 'class-validator';
-import { BoardMember } from 'src/board_members/entities/board_members.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,9 +10,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CardMember } from './card-member.entity';
 import { List } from 'src/list/entities/list.entity';
 import { Activity } from 'src/activity/entities/activity.entity';
+import { CardMember } from 'src/card_members/entities/card-member.entity';
 
 @Entity('cards')
 export class Card {
@@ -47,6 +46,9 @@ export class Card {
 
   @Column({ nullable: true })
   image_path?: string;
+
+  @Column({nullable: false})
+  position: number;
 
   @CreateDateColumn()
   created_at: Date;

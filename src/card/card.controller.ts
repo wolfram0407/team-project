@@ -1,13 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
 import { CardService } from './card.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CardMembersService } from 'src/card_members/card_members.service';
 
 @ApiTags("Card")
 @Controller('cards')
 export class CardController {
-  constructor(private readonly cardService: CardService) {}
+  constructor(
+    private readonly cardService: CardService,
+    private readonly cardMembersService: CardMembersService
+    ) {}
 
   /**
    * 카드 생성
@@ -41,7 +45,7 @@ export class CardController {
   async addCardMember(@Param("cardId") cardId:number,
     @Param("boardMemberId") boardMemberId:number
   ){
-    const data = await this.cardService.addCardMember(cardId, boardMemberId);    
+    const data = await this.cardMembersService.addCardMember(cardId, boardMemberId);    
 
     return {
       statusCode: HttpStatus.CREATED,
@@ -103,6 +107,7 @@ export class CardController {
     }
   }
 
+  
   /**
    * 카드 삭제
    * @param cardId 
@@ -123,7 +128,7 @@ export class CardController {
   @ApiBearerAuth()
   @Delete("/card/:cardMemberId")
   async removeCardMember(@Param("cardMemberid") id:number){
-    await this.cardService.removeCardMember(id);
+    await this.cardMembersService.removeCardMember(id);
 
     return {
       statusCode: HttpStatus.OK,
