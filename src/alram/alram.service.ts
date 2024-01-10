@@ -8,9 +8,9 @@ export class AlramService {
   private observer = this.users$.asObservable();
 
   // 이벤트 발생 함수
-  emitUserEvent(comment: any) {
+  emitUserEvent(userId: number) {
     // next를 통해 이벤트를 생성
-    this.users$.next(comment);
+    this.users$.next({ userId });
     console.log(this.users$);
     console.log(this.observer);
   }

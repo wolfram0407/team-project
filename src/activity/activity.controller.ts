@@ -15,8 +15,9 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { CardService } from '../card/card.service';
-import { alramActivityDto } from 'src/activity/dto/alram-activity.dto';
 import { AlramService } from 'src/alram/alram.service';
+import { UserService } from 'src/user/user.service';
+import { alramActivityDto } from './dto/alram-activity.dto';
 
 @ApiBearerAuth()
 @ApiTags('Activity')
@@ -26,6 +27,7 @@ export class ActivityController {
     private readonly activityService: ActivityService,
     private readonly cardService: CardService,
     private readonly alramService: AlramService,
+    private readonly userService: UserService,
   ) {}
 
   @Post(':cardId')
@@ -46,28 +48,6 @@ export class ActivityController {
     return {
       success: 'true',
       message: '댓글 생성 완료',
-    };
-  }
-
-  @Post(':cardId/user')
-  async reqUser(
-    @Body() alramActivityDto: alramActivityDto,
-    @Param('cardId') cardId: number,
-    @Req() req: any,
-  ) {
-    const { userId } = req.user;
-
-    const card = await this.cardService.findOne(cardId);
-
-    if (!card) {
-      throw new NotFoundException('카드가 존재하지 않습니다.');
-    }
-
-    this.alramService.emitUserEvent(userId);
-
-    return {
-      success: 'true',
-      message: `${userId}가 ${alramActivityDto} 요청했습니다.`,
     };
   }
 
@@ -132,6 +112,25 @@ export class ActivityController {
     return {
       success: 'true',
       message: '댓글 삭제 완료',
+    };
+  }
+
+  @Post('alram')
+  async reqUser(@Body() alramActivityDto: alramActivityDto, @Req() req: any) {
+    const { userId } = req.user;
+
+    const user = await this.userService.findUserById(alramActivityDto.userId);
+    console.log(user);
+
+    if (!user) {
+      throw new NotFoundException('존재하지 않는 사용자입니다.');
+    }
+
+    // 카드 업데이트시 이벤트 발생
+    const data = await this.alramService.emitUserEvent(alramActivityDto.userId);
+    console.log(data);
+    return {
+      message: 'haha',
     };
   }
 }

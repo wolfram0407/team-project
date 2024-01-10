@@ -16,7 +16,7 @@ import { JwtAuthGuard } from './jwt.auth.guard';
         global: true,
         secret: config.get<string>('JWT_SECRET_KEY'),
         signOptions: { expiresIn: '1d' },
-      })
+      }),
     }),
     UserModule,
     ActivityModule,
@@ -26,8 +26,8 @@ import { JwtAuthGuard } from './jwt.auth.guard';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard
-    }
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AuthModule {}

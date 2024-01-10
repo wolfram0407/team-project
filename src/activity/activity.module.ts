@@ -10,11 +10,16 @@ import { BoardMember } from 'src/board_members/entities/board_members.entity';
 import { CardMember } from 'src/card/entities/card-member.entity';
 import { AlramModule } from 'src/alram/alram.module';
 import { AlramService } from 'src/alram/alram.service';
+import { UserService } from 'src/user/user.service';
+import { User } from 'src/user/entities/user.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Activity, Card, List, CardMember, BoardMember, AlramModule])],
+  imports: [
+    TypeOrmModule.forFeature([Activity, Card, List, CardMember, BoardMember, AlramModule, User]),
+  ],
   controllers: [ActivityController],
-  providers: [ActivityService, CardService, AlramService],
+  providers: [ActivityService, CardService, AlramService, UserService, JwtService],
   exports: [ActivityService],
 })
 export class ActivityModule {}
