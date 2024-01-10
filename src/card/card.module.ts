@@ -9,8 +9,7 @@ import { CardMembersService } from 'src/card_members/card_members.service';
 import { CardMember } from 'src/card_members/entities/card-member.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Card, List, BoardMember, CardMember])
-],
+  imports: [TypeOrmModule.forFeature([Card, List, BoardMember, CardMember])],
   controllers: [CardController],
   providers: [CardService, CardMembersService],
 })
