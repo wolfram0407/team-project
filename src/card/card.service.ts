@@ -5,21 +5,24 @@ import { Card } from './entities/card.entity';
 import { DataSource, Repository } from 'typeorm';
 import { List } from 'src/list/entities/list.entity';
 import { MoveCardDto } from './dto/move-card.dto';
+import { ListService } from 'src/list/list.service';
 
 @Injectable()
 export class CardService {
   constructor(
     private readonly dataSource: DataSource,
+    private readonly listService: ListService,
     @InjectRepository(Card) private readonly cardRepository:Repository<Card>,
-    @InjectRepository(List) private readonly listRepository:Repository<List>,   
+    // @InjectRepository(List) private readonly listRepository:Repository<List>,   
   ){
   }
 
+  
+
   async create(title:string, listId: number) {
 
-    const list = await this.listRepository.findOne({
-      where:{listId}
-    })
+    //리스트 서비스 구현 되면 의존성 변경
+    const list = await this.listService.findOne(listId)
     
     if(!list){
       throw new NotFoundException('리스트가 존재하지 않습니다.');
@@ -43,6 +46,7 @@ export class CardService {
     return cards
   }
 
+
   async findOne(id: number) {
     const card = await this.cardRepository.findOneBy({id})
    
@@ -62,37 +66,25 @@ export class CardService {
 
     return await this.dataSource.createQueryBuilder().update(Card).set({
       title, description, notice, label, start_date, end_date, image_path     
-    }).where(`id= ${id}`).execute()  
-
-    
-   
-    
+    }).where(`id= ${id}`).execute()   
     
  }
 
   async moveCard(id: number, list_id:number, moveCardDto: MoveCardDto){
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
-    
-    
-    
+        
     const {position} = moveCardDto;
     
-    const card = await this.cardRepository.findOne({
-      where: {id}
+     const card = await this.cardRepository.findOne({
+       where: {id}
     })
+
 
     if(!card){
       throw new NotFoundException('카드가 존재하지 않습니다.')
-    }
-  
+    }  
     const lastestCard = await this.cardRepository.maximum("position", {listId: list_id})
-
-
-    //트랜잭션 필요함
-    //카드를 뒤로 이동할때
-
-    //동일한 리스트 내에서 이동할 경우
 
     await queryRunner.startTransaction();
     
@@ -139,7 +131,8 @@ export class CardService {
          .createQueryBuilder()
          .update(Card)
          .set({ listId:list_id, position })
-         .where(`id= ${id}`).execute()
+         .where(`id= ${id}`)
+         .execute()
          
          await queryRunner.commitTransaction();
 
@@ -157,7 +150,8 @@ export class CardService {
           .set({
           position: ()=> "position + 1"
           })
-          .where(`position >= ${position} && list_id = ${list_id}`).execute()
+          .where(`position >= ${position} && list_id = ${list_id}`)
+          .execute()
   
           //움직이려는 카드보다 포지션 값이 높은 기존에 존재하던 리스트의 카드들 position값 -1 
           await this.dataSource.manager
@@ -166,7 +160,8 @@ export class CardService {
           .set({
           position: ()=> "position -1"
           })
-          .where(`position > ${card.position} && list_id = ${card.listId}`).execute()
+          .where(`position > ${card.position} && list_id = ${card.listId}`)
+          .execute()
         
     
         await this.dataSource.manager
@@ -189,7 +184,6 @@ export class CardService {
       return '카드 이동 성공'
     }
   }
-
 
 
   async remove(id: number) {

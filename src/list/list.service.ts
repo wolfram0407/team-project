@@ -27,9 +27,15 @@ export class ListService {
   //   return `This action returns all list`;
   // }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} list`;
-  // }
+
+   
+  async findOne(id: number) {
+    const list = await this.listRepository.findOne({where: {listId: id}})
+    
+    return list;
+  }
+
+
 
   async update(id: number, updateListDto: UpdateListDto) {
     const listToUpdate = await this.listRepository.findOne({ where: { listId: id } });
