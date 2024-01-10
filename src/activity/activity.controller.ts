@@ -15,6 +15,8 @@ import { CreateActivityDto } from './dto/create-activity.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { CardService } from '../card/card.service';
+import { alramActivityDto } from 'src/activity/dto/alram-activity.dto';
+import { AlramService } from 'src/alram/alram.service';
 
 @ApiBearerAuth()
 @ApiTags('Activity')
@@ -23,6 +25,7 @@ export class ActivityController {
   constructor(
     private readonly activityService: ActivityService,
     private readonly cardService: CardService,
+    private readonly alramService: AlramService,
   ) {}
 
   @Post(':cardId')
@@ -43,6 +46,28 @@ export class ActivityController {
     return {
       success: 'true',
       message: '댓글 생성 완료',
+    };
+  }
+
+  @Post(':cardId/user')
+  async reqUser(
+    @Body() alramActivityDto: alramActivityDto,
+    @Param('cardId') cardId: number,
+    @Req() req: any,
+  ) {
+    const { userId } = req.user;
+
+    const card = await this.cardService.findOne(cardId);
+
+    if (!card) {
+      throw new NotFoundException('카드가 존재하지 않습니다.');
+    }
+
+    this.alramService.emitUserEvent(userId);
+
+    return {
+      success: 'true',
+      message: `${userId}가 ${alramActivityDto} 요청했습니다.`,
     };
   }
 
