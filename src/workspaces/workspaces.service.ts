@@ -88,7 +88,7 @@ export class WorkspaceService {
   async softRemoveWorkspace(workspaceId: number, userId: number) {
     const workspace = await this.workspaceRepository.findOne({
       where: { workspaceId, userId },
-      relations: ['workspaceMembers'],
+      relations: ['workspaceMembers', 'board'],
     });
 
     await this.workspaceRepository.softRemove(workspace);
