@@ -70,7 +70,6 @@ export class ListController {
     return {
       statusCode: HttpStatus.OK,
       message: '리스트 위치 변경',
-      data,
     };
   }
 }
