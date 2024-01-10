@@ -9,6 +9,7 @@ import { List } from 'src/list/entities/list.entity';
 import { BoardMember } from 'src/board_members/entities/board_members.entity';
 import { CardMember } from 'src/card_members/entities/card-member.entity';
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([Activity, Card, List, CardMember, BoardMember])],
   controllers: [ActivityController],
