@@ -50,7 +50,7 @@ export class User {
   @OneToOne(() => WorkspaceMember, (workspaceMember) => workspaceMember.user, {
     cascade: ['soft-remove'],
   })
-  workspaceMembers: WorkspaceMember[];
+  workspaceMember: WorkspaceMember;
 
   @OneToMany(() => BoardMember, (boardMember) => boardMember.user)
   boardMember: BoardMember[];

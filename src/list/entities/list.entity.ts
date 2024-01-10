@@ -60,7 +60,10 @@ export class List {
   @OneToMany(() => Card, (card) => card.id)
   card: Card[];
 
-  @ManyToOne(() => Board, (board) => board.boardId, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Board, (board) => board.listId, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'board_id' })
+  board: Board;
+
+  @Column({})
   boardId: number;
 }

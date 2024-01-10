@@ -54,17 +54,18 @@ export class ListController {
   /**
    * 리스트 이동
    * @param listId
-   * @param boardId
+   * @param board_id
    * @param moveListDto
    * @returns
    */
-  @Patch('column/:listid/move')
+  @Patch('column/:listId/:boardId/move')
   async moveList(
     @Param('listId') id: number,
-    @Param('boardId') boardId: number,
+    @Param('boardId') board_id: number,
     @Body() moveListDto: MoveListDto,
   ) {
-    const data = await this.listService.move(id, boardId, moveListDto);
+    const data = await this.listService.moveList(id, board_id, moveListDto);
+    // console.log('$#$$#$#$#$$##$$##', id, boardId, moveListDto);
 
     return {
       statusCode: HttpStatus.OK,
