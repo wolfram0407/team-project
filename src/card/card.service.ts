@@ -3,7 +3,6 @@ import { UpdateCardDto } from './dto/update-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Card } from './entities/card.entity';
 import { DataSource, Repository } from 'typeorm';
-import { List } from 'src/list/entities/list.entity';
 import { MoveCardDto } from './dto/move-card.dto';
 import { ListService } from 'src/list/list.service';
 
@@ -71,6 +70,14 @@ export class CardService {
  }
 
   async moveCard(id: number, list_id:number, moveCardDto: MoveCardDto){
+    
+    const list = await this.listService.findOne(list_id)
+    
+    if(!list){
+      throw new NotFoundException('리스트가 존재하지 않습니다.');
+    }
+
+
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
         
