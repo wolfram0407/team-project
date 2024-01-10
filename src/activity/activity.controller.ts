@@ -25,7 +25,7 @@ export class ActivityController {
     private readonly cardService: CardService,
   ) {}
 
-  @ApiOperation({ summary: '카드 생성' })
+  @ApiOperation({ summary: '댓글 생성' })
   @Post(':cardId')
   async create(
     @Body() CreateActivityDto: CreateActivityDto,
@@ -47,7 +47,7 @@ export class ActivityController {
     };
   }
 
-  @ApiOperation({ summary: '카드 조회' })
+  @ApiOperation({ summary: '댓글 조회' })
   @Get(':cardId')
   async findAll(@Param('cardId') cardId: number) {
     const activity = await this.activityService.findAll(cardId);
@@ -65,7 +65,7 @@ export class ActivityController {
     };
   }
 
-  @ApiOperation({ summary: '카드 수정' })
+  @ApiOperation({ summary: '댓글 수정' })
   @Patch(':activityId') // 고유 값이라 cardId는 없어도 된다.
   async update(
     @Param('activityId') activityId: number,
@@ -92,7 +92,7 @@ export class ActivityController {
     };
   }
 
-  @ApiOperation({ summary: '카드 삭제' })
+  @ApiOperation({ summary: '댓글 삭제' })
   @Delete(':activityId')
   async delete(@Param('activityId') activityId: number, @Req() req: any) {
     const { userId } = req.user;
