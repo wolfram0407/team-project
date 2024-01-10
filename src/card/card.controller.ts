@@ -4,6 +4,7 @@ import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CardMembersService } from 'src/card_members/card_members.service';
+import { MoveCardDto } from './dto/move-card.dto';
 
 @ApiTags("Card")
 @Controller('cards')
@@ -107,6 +108,27 @@ export class CardController {
     }
   }
 
+  /**
+   * 카드 이동
+   * @param cardId 
+   * @param list_id 
+   * @param moveCardDto 
+   * @returns 
+   */
+  @ApiBearerAuth()
+  @Patch('/move/:cardId/:listId')
+  async moveCard(
+    @Param('cardId') id: number, 
+    @Param('listId') list_id: number,
+    @Body() moveCardDto: MoveCardDto){
+    const data = await this.cardService.moveCard(id, list_id, moveCardDto);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: '카드 위치변경',
+      data,
+    }
+  }
   
   /**
    * 카드 삭제

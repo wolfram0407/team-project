@@ -60,9 +60,5 @@ export class UpdateCardDto {
   image_path?: string;
 
 
-  @IsOptional()
-  @IsNumber()
-  position?: number;
-
 
 }
