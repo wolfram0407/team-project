@@ -47,7 +47,10 @@ export class CardService {
 
 
   async findOne(id: number) {
-    const card = await this.cardRepository.findOneBy({id})
+    const card = await this.cardRepository.findOne({
+      where: {id},
+      relations: ['cardMember']
+    })
    
     return card
   }
