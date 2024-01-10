@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { ActivityService } from './activity.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { CardService } from '../card/card.service';
 
@@ -25,6 +25,7 @@ export class ActivityController {
     private readonly cardService: CardService,
   ) {}
 
+  @ApiOperation({ summary: '카드 생성' })
   @Post(':cardId')
   async create(
     @Body() CreateActivityDto: CreateActivityDto,
@@ -46,6 +47,7 @@ export class ActivityController {
     };
   }
 
+  @ApiOperation({ summary: '카드 조회' })
   @Get(':cardId')
   async findAll(@Param('cardId') cardId: number) {
     const activity = await this.activityService.findAll(cardId);
@@ -63,7 +65,8 @@ export class ActivityController {
     };
   }
 
-  @Patch(':cardId/:activityId')
+  @ApiOperation({ summary: '카드 수정' })
+  @Patch(':activityId') // 고유 값이라 cardId는 없어도 된다.
   async update(
     @Param('activityId') activityId: number,
     @Body() updateActivityDto: UpdateActivityDto,
@@ -89,7 +92,8 @@ export class ActivityController {
     };
   }
 
-  @Delete(':cardId/:activityId')
+  @ApiOperation({ summary: '카드 삭제' })
+  @Delete(':activityId')
   async delete(@Param('activityId') activityId: number, @Req() req: any) {
     const { userId } = req.user;
 
