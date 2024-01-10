@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsDateString, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateCardDto {
   
@@ -58,4 +58,7 @@ export class UpdateCardDto {
   @IsOptional()
   @IsString()
   image_path?: string;
+
+
+
 }

@@ -19,7 +19,7 @@ import { WorkspaceMemberRole } from 'src/common/types/work-member-role.type';
 
 @ApiTags('WorkspaceMember')
 @ApiBearerAuth()
-@Controller('workspace-members')
+@Controller('w')
 export class WorkspaceMembersController {
   constructor(private readonly workspaceMembersService: WorkspaceMembersService) {}
 
@@ -31,7 +31,7 @@ export class WorkspaceMembersController {
    */
   @UseGuards(WorkspaceMemberRolesGuard)
   @Roles(WorkspaceMemberRole.Admin, WorkspaceMemberRole.Member)
-  @Post(':workspaceId')
+  @Post(':workspaceId/member')
   async create(
     @Body() createWorkspaceMemberDto: ReqCreateWorkspaceMemberDto,
     @Param('workspaceId') workspaceId: number,
@@ -54,7 +54,7 @@ export class WorkspaceMembersController {
    */
   @UseGuards(WorkspaceMemberRolesGuard)
   @Roles(...Object.values(WorkspaceMemberRole))
-  @Get(':workspaceId/name')
+  @Get(':workspaceId/member/name')
   async findMembersByName(@Param('workspaceId') workspaceId: number, @Query('name') name: string) {
     const members = await this.workspaceMembersService.findMembersByName(workspaceId, name);
     return {
@@ -72,7 +72,7 @@ export class WorkspaceMembersController {
    */
   @UseGuards(WorkspaceMemberRolesGuard)
   @Roles(...Object.values(WorkspaceMemberRole))
-  @Get(':workspaceId/email')
+  @Get(':workspaceId/member/email')
   async findMemberByEmail(
     @Param('workspaceId') workspaceId: number,
     @Query('email') email: string,
@@ -92,7 +92,7 @@ export class WorkspaceMembersController {
    */
   @UseGuards(WorkspaceMemberRolesGuard)
   @Roles(...Object.values(WorkspaceMemberRole))
-  @Get(':workspaceId')
+  @Get(':workspaceId/member')
   async findAll(@Param('workspaceId') workspaceId: number) {
     const members = await this.workspaceMembersService.findAllMemebersInWorkspace(workspaceId);
     return {
@@ -111,7 +111,7 @@ export class WorkspaceMembersController {
    */
   @UseGuards(WorkspaceMemberRolesGuard)
   @Roles(WorkspaceMemberRole.Admin)
-  @Patch(':workspaceId/user')
+  @Patch(':workspaceId/member')
   async update(
     @Param('workspaceId') workspaceId: number,
     @Body() ReqUpdateWorkspaceMemberDto: ReqUpdateWorkspaceMemberDto,
@@ -136,7 +136,7 @@ export class WorkspaceMembersController {
    */
   @UseGuards(WorkspaceMemberRolesGuard)
   @Roles(WorkspaceMemberRole.Admin)
-  @Delete(':workspaceId/user')
+  @Delete(':workspaceId/member')
   async remove(@Param('workspaceId') workspaceId: number, @Query('user') userId: number) {
     await this.workspaceMembersService.removeWorkspaceMember(workspaceId, userId);
     return {

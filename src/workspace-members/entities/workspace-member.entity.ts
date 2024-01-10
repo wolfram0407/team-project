@@ -9,6 +9,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -44,7 +45,7 @@ export class WorkspaceMember {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.workspaceMembers, { onDelete: 'CASCADE' })
+  @OneToOne(() => User, (user) => user.workspaceMembers, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

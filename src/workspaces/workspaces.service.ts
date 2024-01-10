@@ -51,17 +51,8 @@ export class WorkspaceService {
       .createQueryBuilder('w')
       .leftJoinAndSelect('w.workspaceMembers', 'wm')
       .leftJoinAndSelect('w.board', 'b')
-      .select([
-        'w.workspaceId',
-        'w.title',
-        'w.description',
-        'wm.userId',
-        'b.boardId',
-        'b.title',
-        'b.image_path',
-      ])
+      .select(['w.workspaceId', 'w.title', 'w.description', 'b.boardId', 'b.title', 'b.image_path'])
       .where('wm.workspaceId=:workspaceId', { workspaceId })
-      .andWhere('wm.userId=:userId', { userId })
       .getOne();
 
     if (!workspace) {
