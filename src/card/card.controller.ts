@@ -6,78 +6,74 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CardMembersService } from 'src/card_members/card_members.service';
 import { MoveCardDto } from './dto/move-card.dto';
 
-@ApiTags("Card")
+@ApiTags('Card')
 @Controller('cards')
 export class CardController {
   constructor(
     private readonly cardService: CardService,
-    private readonly cardMembersService: CardMembersService
-    ) {}
+    private readonly cardMembersService: CardMembersService,
+  ) {}
 
   /**
    * 카드 생성
-   * @param listId 
-   * @param createCardDto 
-   * @returns 
+   * @param listId
+   * @param createCardDto
+   * @returns
    */
   @ApiBearerAuth()
-  @Post(":listId")
-  async create(
-    @Param('listId') listId: number,
-    @Body() createCardDto: CreateCardDto) {
-      const { title } = createCardDto;
-      const data = await this.cardService.create(title, listId);
-          
-      return {
-        statusCode: HttpStatus.CREATED,
-        message: '카드 생성',
-        data,
-      }
+  @Post(':listId')
+  async create(@Param('listId') listId: number, @Body() createCardDto: CreateCardDto) {
+    const { title } = createCardDto;
+    const data = await this.cardService.create(title, listId);
+
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: '카드 생성',
+      data,
+    };
   }
 
   /**
    * 카드 멤버 추가
-   * @param cardId 
-   * @param boardMemberId 
-   * @returns 
+   * @param cardId
+   * @param boardMemberId
+   * @returns
    */
   @ApiBearerAuth()
-  @Post("/card/:cardId/:boardMemberId")
-  async addCardMember(@Param("cardId") cardId:number,
-    @Param("boardMemberId") boardMemberId:number
-  ){
-    const data = await this.cardMembersService.addCardMember(cardId, boardMemberId);    
+  @Post('/card/:cardId/:boardMemberId')
+  async addCardMember(
+    @Param('cardId') cardId: number,
+    @Param('boardMemberId') boardMemberId: number,
+  ) {
+    const data = await this.cardMembersService.addCardMember(cardId, boardMemberId);
 
     return {
       statusCode: HttpStatus.CREATED,
       message: '카드 멤버 추가',
       data,
-    }
+    };
   }
 
   /**
    * 리스트안에 카드들 조회
-   * @param listId 
-   * @returns 
+   * @param listId
+   * @returns
    */
   @ApiBearerAuth()
   @Get(':listId')
-  async findAll(
-    @Param('listId') listId:number
-  ) {
-    const data = await this.cardService.findAll(listId);    
+  async findAll(@Param('listId') listId: number) {
+    const data = await this.cardService.findAll(listId);
     return {
       statusCode: HttpStatus.OK,
       message: '카드 조회',
       data,
-    }
+    };
   }
-
 
   /**
    * 카드 조회
-   * @param cardId 
-   * @returns 
+   * @param cardId
+   * @returns
    */
   @ApiBearerAuth()
   @Get('/card/:cardId')
@@ -87,74 +83,75 @@ export class CardController {
       statusCode: HttpStatus.OK,
       message: '카드 조회',
       data,
-    }
+    };
   }
 
   /**
    * 카드 업데이트
-   * @param id 
-   * @param updateCardDto 
-   * @returns 
+   * @param id
+   * @param updateCardDto
+   * @returns
    */
   @ApiBearerAuth()
   @Patch(':cardId')
   async update(@Param('cardId') id: number, @Body() updateCardDto: UpdateCardDto) {
     const data = await this.cardService.update(id, updateCardDto);
-  
+
     return {
       statusCode: HttpStatus.OK,
       message: '카드 수정',
       data,
-    }
+    };
   }
 
   /**
    * 카드 이동
-   * @param cardId 
-   * @param list_id 
-   * @param moveCardDto 
-   * @returns 
+   * @param cardId
+   * @param list_id
+   * @param moveCardDto
+   * @returns
    */
   @ApiBearerAuth()
   @Patch('/move/:cardId/:listId')
   async moveCard(
-    @Param('cardId') id: number, 
+    @Param('cardId') id: number,
     @Param('listId') list_id: number,
-    @Body() moveCardDto: MoveCardDto){
+    @Body() moveCardDto: MoveCardDto,
+  ) {
     const data = await this.cardService.moveCard(id, list_id, moveCardDto);
 
     return {
       statusCode: HttpStatus.OK,
       message: '카드 위치변경',
       data,
-    }
+    };
   }
-  
+
   /**
    * 카드 삭제
-   * @param cardId 
-   * @returns 
+   * @param cardId
+   * @returns
    */
   @ApiBearerAuth()
   @Delete(':cardId')
   async remove(@Param('cardId') id: number) {
     const data = await this.cardService.remove(id);
-   
+
     return {
       statusCode: HttpStatus.OK,
       message: '카드 삭제',
       data,
-    }
+    };
   }
 
   @ApiBearerAuth()
-  @Delete("/card/:cardMemberId")
-  async removeCardMember(@Param("cardMemberid") id:number){
+  @Delete('/card/:cardMemberId')
+  async removeCardMember(@Param('cardMemberid') id: number) {
     await this.cardMembersService.removeCardMember(id);
 
     return {
       statusCode: HttpStatus.OK,
       message: '카드 멤버 제거',
-    }
+    };
   }
 }
