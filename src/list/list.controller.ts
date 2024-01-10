@@ -11,7 +11,7 @@ export class ListController {
   constructor(private readonly listService: ListService) {}
 
   /**
-   * 컬럼 생성
+   * 리스트 생성
    * @param createListDto
    * @returns
    */
@@ -31,7 +31,7 @@ export class ListController {
   }
 
   /**
-   * 컬럼 수정
+   * 리스트 title 수정
    * @param id
    * @param updateListDto
    * @returns
@@ -42,7 +42,7 @@ export class ListController {
   }
 
   /**
-   * 컬럼 삭제
+   * 리스트 삭제
    * @param id
    * @returns
    */
@@ -52,18 +52,24 @@ export class ListController {
   }
 
   /**
-   * 컬럼 이동
-   * @param id
+   * 리스트 이동
+   * @param listId
    * @param boardId
    * @param moveListDto
    * @returns
    */
-  @Patch('column/:id/move')
-  move(
-    @Param('id') id: number,
+  @Patch('column/:listid/move')
+  async moveList(
+    @Param('listId') id: number,
     @Param('boardId') boardId: number,
     @Body() moveListDto: MoveListDto,
   ) {
-    return this.listService.move(id, boardId, moveListDto);
+    const data = await this.listService.move(id, boardId, moveListDto);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: '리스트 위치 변경',
+      data,
+    };
   }
 }

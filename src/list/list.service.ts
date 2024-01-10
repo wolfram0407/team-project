@@ -23,16 +23,16 @@ export class ListService {
       throw new NotFoundException('해당 보드는 존재하지 않습니다');
     }
 
-    // 해당 boardId를 가진 컬럼들 중 가장 높은 position 값을 찾음
+    // 해당 boardId를 가진 리스트들 중 가장 높은 position 값을 찾음
     const highestPosition = await this.listRepository.findOne({
       where: { boardId: board.boardId },
       order: { position: 'DESC' },
     });
 
-    // 새로운 컬럼의 position 값 설정
+    // 새로운 리스트의 position 값 설정
     const newPosition = highestPosition ? highestPosition.position + 1 : 1;
 
-    // Board가 존재하면 새 List 컬럼을 생성하고 저장
+    // Board가 존재하면 새 List를 생성하고 저장
     const list = this.listRepository.create({
       ...createListDto,
       boardId: board.boardId, // Board.entity를 직접 할당
@@ -72,7 +72,7 @@ export class ListService {
     return { message: '컬럼 제거 성공' };
   }
 
-  async move(listId: number, boardId: number, moveListDto: MoveListDto) {
+  async move(listId: number, newBoardId: number, moveListDto: MoveListDto) {
     const queryRunner = this.connection.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -83,26 +83,47 @@ export class ListService {
         throw new NotFoundException('해당 리스트는 존재하지 않습니다.');
       }
 
-      const currentPosition = list.position;
-      await this.listRepository.update(listId, { position: moveListDto.newPosition });
+      // 리스트가 다른 보드로 이동하는 경우
+      if (list.boardId !== newBoardId) {
+        // 새 보드에서의 최대 position 값 찾기
+        const highestPositionInNewBoard = await this.listRepository.findOne({
+          where: { boardId: newBoardId },
+          order: { position: 'DESC' },
+        });
+        const newPositionInNewBoard = highestPositionInNewBoard
+          ? highestPositionInNewBoard.position + 1
+          : 1;
 
-      // 다른 목록의 위치 업데이트
-      if (currentPosition < moveListDto.newPosition) {
-        // 목록이 아래로 이동
-        await this.updatePositionsDecrease(
-          currentPosition,
-          moveListDto.newPosition,
-          boardId,
-          queryRunner,
-        );
+        // 리스트의 보드와 포지션 업데이트
+        await this.listRepository.update(listId, {
+          boardId: newBoardId,
+          position: newPositionInNewBoard,
+        });
       } else {
-        // 목록이 위로 이동
-        await this.updatePositionsIncrease(
-          currentPosition,
-          moveListDto.newPosition,
-          boardId,
-          queryRunner,
-        );
+        // 리스트가 같은 보드 내에서 이동하는 경우
+        const targetPosition = moveListDto.newPosition;
+
+        // 리스트의 현재 포지션과 대상 포지션 비교
+        if (list.position < targetPosition) {
+          // 리스트가 아래로 이동
+          await this.updatePositionsDecrease(
+            list.position,
+            targetPosition,
+            list.boardId,
+            queryRunner,
+          );
+        } else {
+          // 리스트가 위로 이동
+          await this.updatePositionsIncrease(
+            list.position,
+            targetPosition,
+            list.boardId,
+            queryRunner,
+          );
+        }
+
+        // 리스트 포지션 업데이트
+        await this.listRepository.update(listId, { position: targetPosition });
       }
 
       await queryRunner.commitTransaction();
@@ -114,34 +135,20 @@ export class ListService {
       await queryRunner.release();
     }
   }
-
-  private async updatePositionsDecrease(
-    startPos: number,
-    endPos: number,
+  updatePositionsIncrease(
+    position: number,
+    targetPosition: number,
     boardId: number,
     queryRunner: QueryRunner,
   ) {
-    for (let pos = startPos + 1; pos <= endPos; pos++) {
-      // 포지션 값이 1 미만으로 되지 않도록
-      if (pos - 1 >= 1) {
-        await queryRunner.manager.increment(
-          List,
-          { boardId: boardId, position: pos },
-          'position',
-          -1,
-        );
-      }
-    }
+    throw new Error('Method not implemented.');
   }
-
-  private async updatePositionsIncrease(
-    startPos: number,
-    endPos: number,
+  updatePositionsDecrease(
+    position: number,
+    targetPosition: number,
     boardId: number,
     queryRunner: QueryRunner,
   ) {
-    for (let pos = endPos; pos < startPos; pos++) {
-      await queryRunner.manager.increment(List, { boardId: boardId, position: pos }, 'position', 1);
-    }
+    throw new Error('Method not implemented.');
   }
 }
