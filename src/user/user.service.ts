@@ -51,8 +51,10 @@ export class UserService {
   async deleteUser(userId: number) {
     const user: User = await this.userRepository.findOne({
       where: { userId },
-      relations: ['workspaceMember'],
+      relations: ['workspaceMember', 'boardMember', 'cardMember'],
     });
+
+    console.log(user);
 
     return await this.userRepository.softRemove(user);
   }

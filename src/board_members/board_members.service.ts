@@ -72,11 +72,12 @@ export class BoardMembersService {
         board_id: boardId,
       },
     });
+
     if (!checkBoardMember) {
       throw new NotFoundException();
     }
 
-    const deleteMember = await this.boardMembersRepository.softDelete({
+    const deleteMember = await this.boardMembersRepository.softRemove({
       boardMemberId: checkBoardMember.boardMemberId,
       user_id: userId,
     });

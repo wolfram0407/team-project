@@ -1,4 +1,5 @@
 import { BoardMember } from 'src/board_members/entities/board_members.entity';
+import { CardMember } from 'src/card_members/entities/card-member.entity';
 import { UserGrade } from 'src/common/types/userGrade.type';
 import { WorkspaceMember } from 'src/workspace-members/entities/workspace-member.entity';
 import { Workspace } from 'src/workspaces/entities/workspace.entity';
@@ -47,11 +48,14 @@ export class User {
   @OneToMany(() => Workspace, (worksapce) => worksapce.user)
   workspaces: Workspace[];
 
-  @OneToOne(() => WorkspaceMember, (workspaceMember) => workspaceMember.user, {
+  @OneToMany(() => WorkspaceMember, (workspaceMember) => workspaceMember.user, {
     cascade: ['soft-remove'],
   })
   workspaceMember: WorkspaceMember;
 
-  @OneToMany(() => BoardMember, (boardMember) => boardMember.user)
-  boardMember: BoardMember[];
+  @OneToMany(() => BoardMember, (boardMember) => boardMember.user, { cascade: ['soft-remove'] })
+  boardMember: BoardMember;
+
+  @OneToMany(() => CardMember, (cardMember) => cardMember.user, { cascade: ['soft-remove'] })
+  cardMember: CardMember;
 }
