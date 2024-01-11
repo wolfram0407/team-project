@@ -2,7 +2,8 @@ import { IsString, IsInt } from 'class-validator';
 import { Board } from 'src/board/entities/board.entity';
 import { BoardMember } from 'src/board_members/entities/board_members.entity';
 import { Card } from 'src/card/entities/card.entity';
-import {
+import
+{
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -16,7 +17,8 @@ import {
 @Entity({
   name: 'activity',
 })
-export class Activity {
+export class Activity
+{
   @PrimaryGeneratedColumn()
   activityId: number;
 

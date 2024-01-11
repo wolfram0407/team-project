@@ -7,8 +7,9 @@ import { CreateListDto, UpdateListDto } from './dto/req-list.dto';
 @ApiTags('List')
 @ApiBearerAuth()
 @Controller('list/:boardId')
-export class ListController {
-  constructor(private readonly listService: ListService) {}
+export class ListController
+{
+  constructor(private readonly listService: ListService) { }
 
   /**
    * 리스트 생성
@@ -16,7 +17,8 @@ export class ListController {
    * @returns
    */
   @Post('column')
-  async create(@Param('boardId') boardId: string, @Body() createListDto: CreateListDto) {
+  async create(@Param('boardId') boardId: string, @Body() createListDto: CreateListDto)
+  {
     // boardId를 숫자로 변환.
     const numericBoardId = Number(boardId);
 
@@ -37,7 +39,8 @@ export class ListController {
    * @returns
    */
   @Patch('column/:id')
-  update(@Param('id') id: number, @Body() updateListDto: UpdateListDto) {
+  update(@Param('id') id: number, @Body() updateListDto: UpdateListDto)
+  {
     return this.listService.update(id, updateListDto);
   }
 
@@ -47,7 +50,8 @@ export class ListController {
    * @returns
    */
   @Delete('column/:id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: number)
+  {
     return this.listService.remove(id);
   }
 
@@ -63,7 +67,8 @@ export class ListController {
     @Param('listId') id: number,
     @Param('boardId') board_id: number,
     @Body() moveListDto: MoveListDto,
-  ) {
+  )
+  {
     const data = await this.listService.moveList(id, board_id, moveListDto);
     // console.log('$#$$#$#$#$$##$$##', id, boardId, moveListDto);
 

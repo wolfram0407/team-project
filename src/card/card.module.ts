@@ -1,3 +1,4 @@
+import { BoardMembersModule } from './../board_members/board_members.module';
 import { Module } from '@nestjs/common';
 import { CardService } from './card.service';
 import { CardController } from './card.controller';
@@ -10,10 +11,12 @@ import { ListModule } from 'src/list/list.module';
 
 @Module({
 
-  imports: [TypeOrmModule.forFeature([Card, BoardMember, CardMember]),ListModule
-],
+  imports: [
+    BoardMembersModule,
+    TypeOrmModule.forFeature([Card, BoardMember, CardMember]), ListModule
+  ],
   controllers: [CardController],
   providers: [CardService, CardMembersService],
   exports: [CardService]
 })
-export class CardModule {}
+export class CardModule { }
