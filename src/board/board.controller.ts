@@ -1,26 +1,26 @@
 import { Workspace } from 'src/workspaces/entities/workspace.entity';
 import
-  {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Patch,
-    Param,
-    Delete,
-    Put,
-    Query,
-    UseGuards,
-  } from '@nestjs/common';
+{
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { BoardService } from './board.service';
 import
-  {
-    AddMemberDto,
-    CreateBoardDto,
-    DeleteMemberDto,
-    UpdateBoardDto,
-    UpdateMemberDto,
-  } from './dto/req.board';
+{
+  AddMemberDto,
+  CreateBoardDto,
+  DeleteMemberDto,
+  UpdateBoardDto,
+  UpdateMemberDto,
+} from './dto/req.board';
 import { ApiBearerAuth, ApiProperty, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { UserInfo } from 'src/common/decorator/user.decorator';
 import { User } from 'src/user/entities/user.entity';
@@ -177,6 +177,8 @@ export class BoardController
   {
     return this.boardService.findOne(bt, userId);
   }
+
+
 
   // 보드 사용여부
 }

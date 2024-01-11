@@ -1,3 +1,4 @@
+import { ActivityModule } from './../activity/activity.module';
 import { Module } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { BoardController } from './board.controller';
@@ -14,7 +15,8 @@ import { UserModule } from 'src/user/user.module';
     BoardMembersModule,
     TypeOrmModule.forFeature([Board]),
     WorkspaceModule,
-    WorkspaceMembersModule
+    WorkspaceMembersModule,
+    ActivityModule
   ],
   controllers: [BoardController],
   providers: [BoardService],
