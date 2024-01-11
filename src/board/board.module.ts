@@ -18,5 +18,6 @@ import { UserModule } from 'src/user/user.module';
   ],
   controllers: [BoardController],
   providers: [BoardService],
+  exports: [BoardService]
 })
 export class BoardModule { }

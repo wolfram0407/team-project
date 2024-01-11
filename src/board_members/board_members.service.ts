@@ -14,7 +14,6 @@ export class BoardMembersService
 
   async create(userId: number, boardId: number, role: BoardMemberRole)
   {
-
     const member = this.boardMembersRepository.create({
       role,
       user: { userId },
@@ -25,20 +24,20 @@ export class BoardMembersService
     return boardMember;
   }
 
-  // 보드 멤버 생성 
+  // 보드 멤버 생성
   async addMember(userId: number, boardId: number, role: BoardMemberRole)
   {
     const checkMember = await this.boardMembersRepository
       .createQueryBuilder('bm')
       .where('bm.user_id = :user_id', { user_id: userId })
       .andWhere('bm.board_id = :board_id', { board_id: boardId })
-      .getOne()
+      .getOne();
 
-    if (checkMember)
-      throw new ConflictException('이미 등록된 유저')
+    if (checkMember) throw new ConflictException('이미 등록된 유저');
 
-    return await this.create(userId, boardId, role)
+    return await this.create(userId, boardId, role);
   }
+
   // 보드 아이디로 멤버 조회
   async findBoardMembers(boardId: number)
   {
@@ -49,9 +48,7 @@ export class BoardMembersService
       .getMany();
   }
 
-
-  async findOneBoardMember(boardId: number, userId: number)
-  {
+  async findOneBoardMember(boardId: number, userId: number) {
     return await this.boardMembersRepository
       .createQueryBuilder('member')
       .where('member.deleted_at is null')
@@ -65,15 +62,14 @@ export class BoardMembersService
     const boardMember = await this.findOneBoardMember(boardId, userId);
     if (!boardMember)
     {
-      throw new NotFoundException()
+      throw new NotFoundException();
     }
     boardMember.role = role;
     await this.boardMembersRepository.save(boardMember);
 
     return {
-      message: 'Member updated successfully'
-    }
-
+      message: 'Member updated successfully',
+    };
   }
   // 보드 멤버 탈퇴
   async deleteMember(boardId: number, userId: number)
@@ -96,6 +92,7 @@ export class BoardMembersService
     if (!deleteMember)
     {
       // 에러처리 필요!
+      throw new NotFoundException('에러수정 필요!');
       throw new NotFoundException('에러수정 필요!');
     }
     return {
