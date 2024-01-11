@@ -4,7 +4,8 @@ import { CardMember } from 'src/card_members/entities/card-member.entity';
 import { BoardGrade } from 'src/common/types/boardGrade.type';
 import { BoardMemberRole } from 'src/common/types/boardMember.type';
 import { User } from 'src/user/entities/user.entity';
-import {
+import
+{
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -21,7 +22,8 @@ import {
 @Entity({
   name: 'b_members',
 })
-export class BoardMember {
+export class BoardMember
+{
   @PrimaryGeneratedColumn()
   boardMemberId: number;
 
