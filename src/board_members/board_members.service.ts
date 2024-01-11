@@ -34,6 +34,7 @@ export class BoardMembersService {
 
     return await this.create(userId, boardId, role);
   }
+
   // 보드 아이디로 멤버 조회
   async findBoardMembers(boardId: number) {
     return await this.boardMembersRepository
@@ -72,7 +73,6 @@ export class BoardMembersService {
         board_id: boardId,
       },
     });
-
     if (!checkBoardMember) {
       throw new NotFoundException();
     }
