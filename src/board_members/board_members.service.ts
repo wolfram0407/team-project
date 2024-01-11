@@ -5,13 +5,15 @@ import { IsNull, Not, Repository, createQueryBuilder } from 'typeorm';
 import { BoardMemberRole } from 'src/common/types/boardMember.type';
 
 @Injectable()
-export class BoardMembersService {
+export class BoardMembersService
+{
   constructor(
     @InjectRepository(BoardMember)
     private boardMembersRepository: Repository<BoardMember>,
-  ) {}
+  ) { }
 
-  async create(userId: number, boardId: number, role: BoardMemberRole) {
+  async create(userId: number, boardId: number, role: BoardMemberRole)
+  {
     const member = this.boardMembersRepository.create({
       role,
       user: { userId },
@@ -23,7 +25,8 @@ export class BoardMembersService {
   }
 
   // 보드 멤버 생성
-  async addMember(userId: number, boardId: number, role: BoardMemberRole) {
+  async addMember(userId: number, boardId: number, role: BoardMemberRole)
+  {
     const checkMember = await this.boardMembersRepository
       .createQueryBuilder('bm')
       .where('bm.user_id = :user_id', { user_id: userId })
@@ -34,8 +37,10 @@ export class BoardMembersService {
 
     return await this.create(userId, boardId, role);
   }
+
   // 보드 아이디로 멤버 조회
-  async findBoardMembers(boardId: number) {
+  async findBoardMembers(boardId: number)
+  {
     return await this.boardMembersRepository
       .createQueryBuilder('member')
       .where('member.deleted_at is null')
@@ -43,7 +48,9 @@ export class BoardMembersService {
       .getMany();
   }
 
-  async findOneBoardMember(boardId: number, userId: number) {
+
+  async findOneBoardMember(boardId: number, userId: number)
+  {
     return await this.boardMembersRepository
       .createQueryBuilder('member')
       .where('member.deleted_at is null')
@@ -52,9 +59,11 @@ export class BoardMembersService {
       .getOne();
   }
 
-  async updateMember(boardId: number, userId: number, role: BoardMemberRole) {
+  async updateMember(boardId: number, userId: number, role: BoardMemberRole)
+  {
     const boardMember = await this.findOneBoardMember(boardId, userId);
-    if (!boardMember) {
+    if (!boardMember)
+    {
       throw new NotFoundException();
     }
     boardMember.role = role;
@@ -65,14 +74,16 @@ export class BoardMembersService {
     };
   }
   // 보드 멤버 탈퇴
-  async deleteMember(boardId: number, userId: number) {
+  async deleteMember(boardId: number, userId: number)
+  {
     const checkBoardMember = await this.boardMembersRepository.findOne({
       where: {
         user_id: userId,
         board_id: boardId,
       },
     });
-    if (!checkBoardMember) {
+    if (!checkBoardMember)
+    {
       throw new NotFoundException();
     }
 
@@ -80,7 +91,8 @@ export class BoardMembersService {
       boardMemberId: checkBoardMember.boardMemberId,
       user_id: userId,
     });
-    if (!deleteMember) {
+    if (!deleteMember)
+    {
       // 에러처리 필요!
       throw new NotFoundException('에러수정 필요!');
       throw new NotFoundException('에러수정 필요!');
