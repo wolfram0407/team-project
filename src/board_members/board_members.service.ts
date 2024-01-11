@@ -90,4 +90,11 @@ export class BoardMembersService {
       message: 'successfully deleted member ',
     };
   }
+
+
+  async findOneBoardMemberById(boardMemberId: number)
+  {
+    return await this.boardMembersRepository.findOne({ where: { boardMemberId } })
+  }
+
 }

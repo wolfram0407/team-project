@@ -7,7 +7,8 @@ import { CreateListDto, UpdateListDto } from './dto/req-list.dto';
 import { Board } from 'src/board/entities/board.entity';
 
 @Injectable()
-export class ListService {
+export class ListService
+{
   constructor(
     private readonly dataSource: DataSource,
     @InjectRepository(List)
@@ -15,12 +16,14 @@ export class ListService {
     @InjectRepository(Board)
     private readonly boardRepository: Repository<Board>,
     // private connection: Connection,
-  ) {}
+  ) { }
 
-  async create(boardId: number, createListDto: CreateListDto) {
+  async create(boardId: number, createListDto: CreateListDto)
+  {
     // Board의 존재 여부를 확인
     const board = await this.boardRepository.findOne({ where: { boardId } });
-    if (!board) {
+    if (!board)
+    {
       throw new NotFoundException('해당 보드는 존재하지 않습니다');
     }
 
@@ -41,24 +44,30 @@ export class ListService {
       position: newPosition,
     });
 
+    await this.listRepository.save(list);
+  }
 
-   
-  async findOne(id: number) {
-    const list = await this.listRepository.findOne({where: {listId: id}})
-    
+
+  async findOne(id: number)
+  {
+    const list = await this.listRepository.findOne({ where: { listId: id } })
+
     return list;
   }
 
 
 
-  async update(id: number, updateListDto: UpdateListDto) {
+  async update(id: number, updateListDto: UpdateListDto)
+  {
     const listToUpdate = await this.listRepository.findOne({ where: { listId: id } });
-    if (!listToUpdate) {
+    if (!listToUpdate)
+    {
       throw new NotFoundException('해당 리스트는 존재하지 않습니다');
     }
 
     // 컬럼 수정 시 title 이 빈 문자열 이라면 기존의 title 을 유지함
-    if (updateListDto.title !== undefined && updateListDto.title.trim() === '') {
+    if (updateListDto.title !== undefined && updateListDto.title.trim() === '')
+    {
       updateListDto.title = listToUpdate.title;
     }
 
@@ -70,9 +79,11 @@ export class ListService {
     return updatedList;
   }
 
-  async remove(id: number) {
+  async remove(id: number)
+  {
     const listToRemove = await this.listRepository.findOne({ where: { listId: id } }); // findOne 으로 삭제할 컬럼 찾기
-    if (!listToRemove) {
+    if (!listToRemove)
+    {
       throw new NotFoundException('해당 리스트는 존재하지 않습니다');
     }
 
@@ -80,14 +91,16 @@ export class ListService {
     return { message: '컬럼 제거 성공' };
   }
 
-  async moveList(listId: number, board_id: number, moveListDto: MoveListDto) {
+  async moveList(listId: number, board_id: number, moveListDto: MoveListDto)
+  {
     const { position } = moveListDto;
 
     const list = await this.listRepository.findOne({
       where: { listId },
     });
     // 없는 list 이동 방지하려고 넣어두신건가?
-    if (!list) {
+    if (!list)
+    {
       throw new NotFoundException('리스트가 존재하지 않습니다');
     }
     console.log('#$#$#$#@#!$#$#%#@$', list);
@@ -97,14 +110,18 @@ export class ListService {
     // 리스트를 뒤로 이동할때
     // 동일한 보드 내에서 이동할 경우
 
-    if (board_id === list.boardId) {
-      if (lastestList < position) {
+    if (board_id === list.boardId)
+    {
+      if (lastestList < position)
+      {
         throw new BadRequestException('최대 포지션 값을 넘을 수 없습니다.');
-      } else if (position < 1) {
+      } else if (position < 1)
+      {
         throw new BadRequestException('포지션 값은 1보다 작을 수 없습니다');
       }
 
-      if (list.position < position) {
+      if (list.position < position)
+      {
         await this.dataSource
           .createQueryBuilder()
           .update(List)
@@ -125,7 +142,8 @@ export class ListService {
           .execute();
 
         return updatedList;
-      } else if (list.position > position) {
+      } else if (list.position > position)
+      {
         await this.dataSource
           .createQueryBuilder()
           .update(List)
@@ -144,10 +162,12 @@ export class ListService {
 
         return updatedList;
       }
-    } else if (board_id !== list.boardId) {
+    } else if (board_id !== list.boardId)
+    {
       // 다른 보드로 이동하려는 경우
 
-      if (position > lastestList + 1 || position < 1) {
+      if (position > lastestList + 1 || position < 1)
+      {
         throw new BadRequestException('올바르지 않는 위치 값 입니다');
       }
 
