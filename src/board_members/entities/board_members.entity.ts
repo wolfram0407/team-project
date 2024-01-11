@@ -54,7 +54,9 @@ export class BoardMember
   @OneToMany((type) => Activity, (activity) => activity.boardMember)
   activity: Activity[];
 
-  @OneToOne((type) => CardMember, (cardMember) => cardMember.boardMember, { onDelete: 'CASCADE' })
+  @OneToMany((type) => CardMember, (cardMember) => cardMember.boardMember, {
+    cascade: ['soft-remove'],
+  })
   @JoinColumn({ name: 'card_member_id' })
   cardMember: CardMember;
 }

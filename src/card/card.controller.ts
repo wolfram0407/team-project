@@ -145,9 +145,8 @@ export class CardController {
   }
 
   @ApiBearerAuth()
-
   @Delete('/card/:cardMemberId')
-  async removeCardMember(@Param('cardMemberid') id: number) {
+  async removeCardMember(@Param('cardMemberId') id: number) {
     await this.cardMembersService.removeCardMember(id);
 
     return {

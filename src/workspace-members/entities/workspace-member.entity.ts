@@ -45,7 +45,7 @@ export class WorkspaceMember {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToOne(() => User, (user) => user.workspaceMember, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.workspaceMember)
   @JoinColumn({ name: 'user_id' })
   user: User;
 
