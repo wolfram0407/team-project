@@ -48,6 +48,7 @@ export class BoardMembersService
       .getMany();
   }
 
+
   async findOneBoardMember(boardId: number, userId: number)
   {
     return await this.boardMembersRepository
