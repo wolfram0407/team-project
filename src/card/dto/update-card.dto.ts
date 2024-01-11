@@ -1,7 +1,6 @@
-import { IsBoolean, IsDate, IsDateString, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateCardDto {
-  
   /**
    * 타이틀
    * @example "수정된 제목 입니다"
@@ -9,7 +8,7 @@ export class UpdateCardDto {
   @IsOptional()
   @IsString()
   title?: string;
-  
+
   /**
    * 설명
    * @example "카드 설명 입니다."
@@ -17,15 +16,15 @@ export class UpdateCardDto {
   @IsOptional()
   @IsString()
   description?: string;
-  
+
   /**
    * 알림 설정
    * @example "true"
    */
   @IsOptional()
   @IsBoolean()
-  notice?:boolean;
-  
+  notice?: boolean;
+
   /**
    * 라벨 테스트 근데 테이블 따로 빼야될듯?
    * @example "확인 요청"
@@ -33,7 +32,7 @@ export class UpdateCardDto {
   @IsOptional()
   @IsString()
   label?: string;
-  
+
   /**
    * 시작일
    * @example "2024-01-19"
@@ -41,7 +40,7 @@ export class UpdateCardDto {
   @IsOptional()
   @IsDateString()
   start_date?: Date;
-  
+
   /**
    * 종료일
    * @example "2024-01-20"
@@ -49,16 +48,13 @@ export class UpdateCardDto {
   @IsOptional()
   @IsDateString()
   end_date?: Date;
-  
+
   /**
    * 이미지 주소
    * @example https://image.news1.kr/system/photos/2023/12/23/6394223/article.jpg/dims/optimize
-  */
-   
+   */
+
   @IsOptional()
   @IsString()
   image_path?: string;
-
-
-
 }

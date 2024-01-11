@@ -27,22 +27,21 @@ export class CardService {
       throw new NotFoundException('리스트가 존재하지 않습니다.');
     }
 
-    const lastestCard = await this.cardRepository.maximum("position", {listId})
+    const lastestCard = await this.cardRepository.maximum('position', { listId });
 
     await this.cardRepository.save({
       title,
       listId,
-      position: lastestCard + 1
-    })
+      position: lastestCard + 1,
+    });
   }
 
-
   async findAll(listId: number) {
-    const cards =  await this.cardRepository.find({
-      where: {listId}
+    const cards = await this.cardRepository.find({
+      where: { listId },
     });
 
-    return cards
+    return cards;
   }
 
 
@@ -56,15 +55,16 @@ export class CardService {
   }
 
   async update(id: number, updateCardDto: UpdateCardDto) {
-    const {title, description, notice, label, start_date, end_date, image_path} = updateCardDto;  
-  
-    const card = await this.cardRepository.findOne({
-      where: {id}
-    })
+    const { title, description, notice, label, start_date, end_date, image_path } = updateCardDto;
 
-    if(!card){
-      throw new NotFoundException('카드가 존재하지 않습니다.')
+    const card = await this.cardRepository.findOne({
+      where: { id },
+    });
+
+    if (!card) {
+      throw new NotFoundException('카드가 존재하지 않습니다.');
     }
+
 
     return await this.dataSource.createQueryBuilder().update(Card).set({
       title, description, notice, label, start_date, end_date, image_path     
@@ -95,28 +95,34 @@ export class CardService {
       throw new NotFoundException('카드가 존재하지 않습니다.')
     }  
     const lastestCard = await this.cardRepository.maximum("position", {listId: list_id})
-
-    await queryRunner.startTransaction();
     
-    try{
-      if(list_id === card.listId){
-      
-        if(lastestCard < position){
-          throw new BadRequestException('최대 포지션 값을 넘을 수 없습니다')
-        } else if(position< 1){
-          throw new BadRequestException('포지션 값은 1보다 작을 수 없습니다')
-        }
-  
-  
-        if(card.position < position){
-                   
-          await this.dataSource.manager
-          .createQueryBuilder()
-          .update(Card)
-          .set({ position: ()=> "position - 1" })
-          .where(`position <=${position} && position > ${card.position} && list_Id = ${list_id}`)
-          .execute()
+    await queryRunner.startTransaction();
 
+    try {
+      if (list_id === card.listId) {
+        if (lastestCard < position) {
+          throw new BadRequestException('최대 포지션 값을 넘을 수 없습니다');
+        } else if (position < 1) {
+          throw new BadRequestException('포지션 값은 1보다 작을 수 없습니다');
+        }
+
+        if (card.position < position) {
+          await this.dataSource.manager
+            .createQueryBuilder()
+            .update(Card)
+            .set({ position: () => 'position - 1' })
+            .where(`position <=${position} && position > ${card.position} && list_Id = ${list_id}`)
+            .execute();
+
+          await this.dataSource.manager
+            .createQueryBuilder()
+            .update(Card)
+            .set({
+              listId: list_id,
+              position,
+            })
+            .where(`id= ${id}`)
+            .execute();
 
          await this.dataSource.manager
          .createQueryBuilder()
@@ -146,19 +152,27 @@ export class CardService {
          
          await queryRunner.commitTransaction();
 
+          await this.dataSource.manager
+            .createQueryBuilder()
+            .update(Card)
+            .set({ listId: list_id, position })
+            .where(`id= ${id}`)
+            .execute();
+
+          await queryRunner.commitTransaction();
         }
-      } else if(list_id !== card.listId){      //다른 리스트로 이동할 경우  
-        
-        if(position > lastestCard + 1 || position < 1) {
-          throw new BadRequestException('올바르지 않은 위치값 입니다.')
+      } else if (list_id !== card.listId) {
+        //다른 리스트로 이동할 경우
+
+        if (position > lastestCard + 1 || position < 1) {
+          throw new BadRequestException('올바르지 않은 위치값 입니다.');
         }
-  
-  
+
         await this.dataSource.manager
           .createQueryBuilder()
           .update(Card)
           .set({
-          position: ()=> "position + 1"
+            position: () => 'position + 1',
           })
           .where(`position >= ${position} && list_id = ${list_id}`)
           .execute()
@@ -168,7 +182,7 @@ export class CardService {
           .createQueryBuilder()
           .update(Card)
           .set({
-          position: ()=> "position -1"
+            position: () => 'position -1',
           })
           .where(`position > ${card.position} && list_id = ${card.listId}`)
           .execute()
@@ -186,79 +200,86 @@ export class CardService {
       }
 
 
-    }catch (err){
-      await queryRunner.rollbackTransaction()
-      return '카드 이동 실패'
-    }finally {
+        await this.dataSource.manager
+          .createQueryBuilder()
+          .update(Card)
+          .set({ listId: list_id, position })
+          .where(`id= ${id}`)
+          .execute();
+
+        await queryRunner.commitTransaction();
+      }
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      return '카드 이동 실패';
+    } finally {
       await queryRunner.release();
-      return '카드 이동 성공'
+      return '카드 이동 성공';
     }
   }
-
 
   async remove(id: number) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
-  
+
     try {
       await queryRunner.startTransaction();
-  
+
       const card = await this.cardRepository.findOne({ where: { id } });
-  
+
       if (!card) {
         // 삭제된 카드를 찾을 때 withDeleted 옵션을 사용합니다.
         const deletedCard = await this.cardRepository.findOne({
           where: { id },
           withDeleted: true,
         });
-  
+
         if (deletedCard) {
           await this.dataSource.manager
             .createQueryBuilder()
             .update(Card)
             .set({
-              position: () => "position + 1",
+              position: () => 'position + 1',
             })
             .where(`position >= ${deletedCard.position} AND deleted_at IS NULL`)
             .execute();
-  
+
           await this.dataSource.manager
             .getRepository(Card)
             .createQueryBuilder()
             .restore()
-            .where("id = :id", { id })
+            .where('id = :id', { id })
             .execute();
         } else {
-          throw new NotFoundException('복구하려는 카드가 존재하지 않습니다.')
+          throw new NotFoundException('복구하려는 카드가 존재하지 않습니다.');
         }
       } else {
         await this.dataSource.manager
           .createQueryBuilder()
           .update(Card)
           .set({
-            position: () => "position - 1",
+            position: () => 'position - 1',
           })
           .where(`position > ${card.position}`)
           .execute();
-  
+
         await this.dataSource.manager
           .getRepository(Card)
           .createQueryBuilder()
           .softDelete()
-          .where("id = :id", { id })
+          .where('id = :id', { id })
           .execute();
       }
-  
+
       await queryRunner.commitTransaction();
-  
-      return "카드 삭제 또는 복구 성공";
+
+      return '카드 삭제 또는 복구 성공';
     } catch (err) {
       console.log(err);
       await queryRunner.rollbackTransaction();
-      return "카드 삭제 실패";
+      return '카드 삭제 실패';
     } finally {
       await queryRunner.release();
     }
   }
-
 }
