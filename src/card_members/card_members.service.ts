@@ -24,6 +24,6 @@ export class CardMembersService {
   }
 
   async removeCardMember(id: number) {
-    await this.cardMemberRepository.delete({ id });
+    await this.cardMemberRepository.softRemove({ id });
   }
 }
