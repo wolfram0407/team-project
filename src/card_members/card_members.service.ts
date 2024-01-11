@@ -3,10 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CardMember } from './entities/card-member.entity';
 import { Repository } from 'typeorm';
 import { BoardMember } from 'src/board_members/entities/board_members.entity';
+import { BoardMembersService } from 'src/board_members/board_members.service';
 
 @Injectable()
 export class CardMembersService {
   constructor(
+    // private readonly boardMemberService: BoardMembersService,
     @InjectRepository(CardMember)  private cardMemberRepository: Repository<CardMember>,
     @InjectRepository(BoardMember) private readonly boardMemberRepsitory: Repository<BoardMember>
   ){}
