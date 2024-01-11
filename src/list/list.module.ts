@@ -5,12 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { List } from './entities/list.entity';
 import { Board } from 'src/board/entities/board.entity';
 import { Card } from 'src/card/entities/card.entity';
-import { CardModule } from 'src/card/card.module';
+// import { CardModule } from 'src/card/card.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([List, Board, Card])],
   controllers: [ListController],
   providers: [ListService],
-  exports: [ListService]
+  exports: [ListService],
 })
 export class ListModule {}

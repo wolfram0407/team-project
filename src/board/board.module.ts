@@ -14,9 +14,9 @@ import { UserModule } from 'src/user/user.module';
     BoardMembersModule,
     TypeOrmModule.forFeature([Board]),
     WorkspaceModule,
-    WorkspaceMembersModule
+    WorkspaceMembersModule,
   ],
   controllers: [BoardController],
   providers: [BoardService],
 })
-export class BoardModule { }
+export class BoardModule {}

@@ -41,15 +41,14 @@ export class ListService {
       position: newPosition,
     });
 
-
-   
-  async findOne(id: number) {
-    const list = await this.listRepository.findOne({where: {listId: id}})
-    
-    return list;
+    return await this.listRepository.save(list);
   }
 
+  async findOne(id: number) {
+    const list = await this.listRepository.findOne({ where: { listId: id } });
 
+    return list;
+  }
 
   async update(id: number, updateListDto: UpdateListDto) {
     const listToUpdate = await this.listRepository.findOne({ where: { listId: id } });
